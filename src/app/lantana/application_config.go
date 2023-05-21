@@ -1,11 +1,11 @@
 // ˅
-package main
+package lantana
 
 // ˄
 
 type ApplicationConfig struct {
 	// ˅
-	
+
 	// ˄
 
 	HiddenTags []*string
@@ -15,7 +15,7 @@ type ApplicationConfig struct {
 	TagStruct interface{}
 
 	// ˅
-	
+
 	// ˄
 }
 

@@ -1,5 +1,5 @@
 // ˅
-package main
+package lantana
 
 // ˄
 
@@ -15,7 +15,7 @@ const (
 	LessThan
 
 	// ˅
-	
+
 	// ˄
 )
 

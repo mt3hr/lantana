@@ -1,11 +1,11 @@
 // ˅
-package main
+package lantana
 
 // ˄
 
 type TLS struct {
 	// ˅
-	
+
 	// ˄
 
 	Enable bool
@@ -15,7 +15,7 @@ type TLS struct {
 	KeyFile string
 
 	// ˅
-	
+
 	// ˄
 }
 

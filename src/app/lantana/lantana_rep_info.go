@@ -1,11 +1,11 @@
 // ˅
-package main
+package lantana
 
 // ˄
 
 type LantanaRepInfo struct {
 	// ˅
-	
+
 	// ˄
 
 	Type string
@@ -13,7 +13,7 @@ type LantanaRepInfo struct {
 	File string
 
 	// ˅
-	
+
 	// ˄
 }
 

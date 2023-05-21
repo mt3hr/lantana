@@ -1,11 +1,17 @@
 // ˅
-package main
+package lantana
+
+import (
+	"github.com/mt3hr/kmemo"
+	"github.com/mt3hr/rykv/tag"
+	"github.com/mt3hr/rykv/text"
+)
 
 // ˄
 
 type Reps struct {
 	// ˅
-	
+
 	// ˄
 
 	LantanaRep *LantanaRepInfo
@@ -25,7 +31,7 @@ type Reps struct {
 	KmemoReps []*kmemo.KmemoRepInfo
 
 	// ˅
-	
+
 	// ˄
 }
 

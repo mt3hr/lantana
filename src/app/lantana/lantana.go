@@ -1,11 +1,13 @@
 // ˅
-package main
+package lantana
+
+import "time"
 
 // ˄
 
 type Lantana struct {
 	// ˅
-	
+
 	// ˄
 
 	LantanaID string
@@ -15,7 +17,7 @@ type Lantana struct {
 	Time time.Time
 
 	// ˅
-	
+
 	// ˄
 }
 

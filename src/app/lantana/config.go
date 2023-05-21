@@ -1,15 +1,15 @@
 // ˅
-package main
+package lantana
 
 // ˄
 
 type Config struct {
 	// ˅
-	
+
 	// ˄
 
 	// ˅
-	
+
 	// ˄
 }
 

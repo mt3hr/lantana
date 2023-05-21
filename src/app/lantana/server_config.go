@@ -1,11 +1,11 @@
 // ˅
-package main
+package lantana
 
 // ˄
 
 type ServerConfig struct {
 	// ˅
-	
+
 	// ˄
 
 	LocalOnly bool
@@ -13,7 +13,7 @@ type ServerConfig struct {
 	Address string
 
 	// ˅
-	
+
 	// ˄
 }
 

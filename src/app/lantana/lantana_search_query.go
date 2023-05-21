@@ -1,11 +1,11 @@
 // ˅
-package main
+package lantana
 
 // ˄
 
 type LantanaSearchQuery struct {
 	// ˅
-	
+
 	// ˄
 
 	Tags []string
@@ -17,7 +17,7 @@ type LantanaSearchQuery struct {
 	LantanaSearchType *LantanaSearchType
 
 	// ˅
-	
+
 	// ˄
 }
 

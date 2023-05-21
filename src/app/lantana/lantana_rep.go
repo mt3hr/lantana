@@ -1,43 +1,43 @@
 // ˅
-package main
+package lantana
+
+import (
+	"context"
+
+	"github.com/mt3hr/rykv/kyou"
+)
 
 // ˄
 
 type LantanaRep interface {
-	GetAllLantanas() []*Lantana
+	GetAllLantanas() ([]*Lantana, error)
 
-	GetLantana(ctx context.Context, lantanaID string) *Lantana
+	GetLantana(ctx context.Context, lantanaID string) (*Lantana, error)
 
-	AddLantana(ctx context.Context, lantana Lantana)
+	AddLantana(ctx context.Context, lantana Lantana) error
 
-	Delete(id string)
+	SearchLantana(ctx context.Context, query *LantanaSearchQuery) ([]*Lantana, error)
 
-	SearchLantana(ctx context.Context, query *LantanaSearchQuery) []*Lantana
+	GetAllKyous(ctx context.Context) ([]*kyou.Kyou, error)
 
-	GetAllKyous(ctx context.Context) []*kyou.Kyou
+	GetContentHTML(ctx context.Context, id string) (string, error)
 
-	GetContentHTML(ctx context.Context, id string) string
+	GetPath(ctx context.Context, id string) (string, error)
 
-	GetAllKyous(ctx context.Context) []*kyou.Kyou
+	Delete(id string) error
 
-	GetContentHTML(ctx context.Context, id string) string
-
-	GetPath(ctx context.Context, id string) string
-
-	Delete(id string)
-
-	Close()
+	Close() error
 
 	Path() string
 
 	RepName() string
 
-	Search(ctx context.Context, word string) []*kyou.Kyou
+	Search(ctx context.Context, word string) ([]*kyou.Kyou, error)
 
-	UpdateCache(ctx context.Context)
+	UpdateCache(ctx context.Context) error
 
 	// ˅
-	
+
 	// ˄
 }
 
