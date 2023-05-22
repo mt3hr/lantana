@@ -11,8 +11,8 @@ package lantana
 type LantanaAPIAddress string
 
 const (
-	LantanaAddress                 = "/"
-	LantanaViewerAddress           = "/lantana_viewer"
+	AddLantanaPageAddress          = "/"
+	LantanaLogViewerPageAddress    = "/lantana_log_viewer"
 	SearchLantanaAddress           = "/api/search_lantana"
 	AddLantanaAddress              = "/api/add_lantana"
 	DeleteLantanaAddress           = "/api/delete_lantana"

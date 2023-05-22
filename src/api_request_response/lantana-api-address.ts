@@ -5,9 +5,9 @@
 
 export enum LantanaAPIAddress {
 
-    lantana_address = "/",
+    add_lantana_page_address = "/",
 
-    lantana_viewer_address = "/lantana_viewer",
+    lantana_log_viewer_page_address = "/lantana_log_viewer",
 
     search_lantana_address = "/api/search_lantana",
 
@@ -35,9 +35,9 @@ export enum LantanaAPIAddress {
 
     get_application_config_address = "/api/get_application_config",
 
-    lantana_method = "get",
+    add_lantana_page_method = "get",
 
-    lantana_viewer_method = "get",
+    lantana_log_viewer_page_method = "get",
 
     search_lantana_method = "post",
 
