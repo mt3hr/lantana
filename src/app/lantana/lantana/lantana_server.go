@@ -117,27 +117,31 @@ func (l *LantanaServer) HandleGetApplicationConfig(w http.ResponseWriter, r *htt
 	// ˄
 }
 
-func (l *LantanaServer) LoadConfig() {
+func (l *LantanaServer) LoadConfig() error {
 	// ˅
 
+	panic("notImplements")
 	// ˄
 }
 
-func (l *LantanaServer) LoadRepositories() {
+func (l *LantanaServer) LoadRepositories() error {
 	// ˅
 
+	panic("notImplements")
 	// ˄
 }
 
-func (l *LantanaServer) LoadTagStruct() {
+func (l *LantanaServer) LoadTagStruct() error {
 	// ˅
 
+	panic("notImplements")
 	// ˄
 }
 
-func (l *LantanaServer) WrapT() {
+func (l *LantanaServer) WrapT() error {
 	// ˅
 
+	panic("notImplements")
 	// ˄
 }
 
@@ -147,9 +151,10 @@ func (l *LantanaServer) CreateDefaultCOnfigYAML() string {
 	// ˄
 }
 
-func (l *LantanaServer) LaunchServer() {
+func (l *LantanaServer) LaunchServer() error {
 	// ˅
 
+	panic("notImplements")
 	// ˄
 }
 
