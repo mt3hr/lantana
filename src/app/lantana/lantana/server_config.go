@@ -12,6 +12,8 @@ type ServerConfig struct {
 
 	Address string
 
+	TLS *TLS
+
 	// ˅
 
 	// ˄

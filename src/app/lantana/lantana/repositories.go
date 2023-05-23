@@ -38,6 +38,13 @@ type Repositories struct {
 	// ˄
 }
 
+func (r *Repositories) Close() error {
+	// ˅
+
+	panic("notImplements")
+	// ˄
+}
+
 // ˅
 
 // ˄
