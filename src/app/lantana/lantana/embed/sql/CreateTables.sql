@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS lantana (
+    LantanaID TEXT PRIMARY KEY,
+    Time TEXT NOT NULL,
+    Mood TEXT NOT NULL
+);
