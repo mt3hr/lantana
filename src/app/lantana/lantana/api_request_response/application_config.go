@@ -1,5 +1,5 @@
 // ˅
-package lantana
+package api_request_response
 
 // ˄
 
@@ -8,9 +8,9 @@ type ApplicationConfig struct {
 
 	// ˄
 
-	HiddenTags []*string
+	HiddenTags []string
 
-	UnCheckTags []*string
+	UnCheckTags []string
 
 	TagStruct interface{}
 

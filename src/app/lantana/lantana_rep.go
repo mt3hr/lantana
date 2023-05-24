@@ -10,11 +10,11 @@ import (
 // ˄
 
 type LantanaRep interface {
-	GetAllLantanas() ([]*Lantana, error)
+	GetAllLantanas(ctx context.Context) ([]*Lantana, error)
 
 	GetLantana(ctx context.Context, lantanaID string) (*Lantana, error)
 
-	AddLantana(ctx context.Context, lantana Lantana) error
+	AddLantana(ctx context.Context, lantana *Lantana) error
 
 	SearchLantana(ctx context.Context, query *LantanaSearchQuery) ([]*Lantana, error)
 

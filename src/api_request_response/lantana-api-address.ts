@@ -33,6 +33,10 @@ export enum LantanaAPIAddress {
 
     get_texts_related_lantana_address = "/api/get_texts_related_lantana",
 
+    get_tags_related_kmemo_address = "/api/get_tags_related_kmemo",
+
+    get_texts_related_kmemo_address = "/api/get_texts_related_kmemo",
+
     get_application_config_address = "/api/get_application_config",
 
     add_lantana_page_method = "get",
@@ -63,7 +67,11 @@ export enum LantanaAPIAddress {
 
     get_texts_related_lantana_method = "post",
 
-    get_application_config_method = "post"
+    get_application_config_method = "post",
+
+    get_tags_related_kmemo_method = "post",
+
+    get_texts_related_kmemo_method = "post",
 
     // ˅
 

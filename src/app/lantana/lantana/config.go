@@ -1,6 +1,8 @@
 // ˅
 package lantana
 
+import "github.com/mt3hr/lantana/src/app/lantana/lantana/api_request_response"
+
 // ˄
 
 type Config struct {
@@ -8,7 +10,7 @@ type Config struct {
 
 	// ˄
 
-	ApplicationConfig *ApplicationConfig
+	ApplicationConfig *api_request_response.ApplicationConfig
 
 	ServerConfig *ServerConfig
 

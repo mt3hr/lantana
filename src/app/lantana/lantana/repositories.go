@@ -2,6 +2,8 @@
 package lantana
 
 import (
+	"fmt"
+
 	"github.com/mt3hr/kmemo"
 	"github.com/mt3hr/lantana/src/app/lantana"
 	"github.com/mt3hr/rykv/tag"
@@ -40,8 +42,48 @@ type Repositories struct {
 
 func (r *Repositories) Close() error {
 	// ˅
-
-	panic("notImplements")
+	for _, rep := range r.LantanaReps {
+		err := rep.Close()
+		if err != nil {
+			err = fmt.Errorf("error at close %s: %w", rep.Path(), err)
+			return err
+		}
+	}
+	for _, rep := range r.TagReps {
+		err := rep.Close()
+		if err != nil {
+			err = fmt.Errorf("error at close %s: %w", rep.Path(), err)
+			return err
+		}
+	}
+	for _, rep := range r.TextReps {
+		err := rep.Close()
+		if err != nil {
+			err = fmt.Errorf("error at close %s: %w", rep.Path(), err)
+			return err
+		}
+	}
+	err := r.LantanaRep.Close()
+	if err != nil {
+		err = fmt.Errorf("error at close %s: %w", r.LantanaRep.Path(), err)
+		return err
+	}
+	err = r.KmemoRep.Close()
+	if err != nil {
+		err = fmt.Errorf("error at close %s: %w", r.KmemoRep.Path(), err)
+		return err
+	}
+	err = r.TagRep.Close()
+	if err != nil {
+		err = fmt.Errorf("error at close %s: %w", r.TagRep.Path(), err)
+		return err
+	}
+	err = r.TextRep.Close()
+	if err != nil {
+		err = fmt.Errorf("error at close %s: %w", r.TextRep.Path(), err)
+		return err
+	}
+	return nil
 	// ˄
 }
 

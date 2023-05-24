@@ -1,17 +1,19 @@
 // ˅
 package api_request_response
 
+import "github.com/mt3hr/lantana/src/app/lantana"
+
 // ˄
 
 type AddLantanaRequest struct {
 	// ˅
-	
+
 	// ˄
 
-	Lantana *Lantana
+	Lantana *lantana.Lantana
 
 	// ˅
-	
+
 	// ˄
 }
 

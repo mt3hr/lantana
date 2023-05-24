@@ -1,11 +1,13 @@
 // ˅
 package api_request_response
 
+import "github.com/mt3hr/kmemo"
+
 // ˄
 
 type GetKmemosRelatedLantanaResponse struct {
 	// ˅
-	
+
 	// ˄
 
 	Errors []string
@@ -13,7 +15,7 @@ type GetKmemosRelatedLantanaResponse struct {
 	Kmemos []*kmemo.Kmemo
 
 	// ˅
-	
+
 	// ˄
 }
 

@@ -55,6 +55,9 @@ export class LantanaServerAPI {
         })
         const json = await res.json()
         const response: SearchLantanaResponse = json
+        for (let i = 0; i < response.lantanas.length; i++) {
+            response.lantanas[i].time = new Date(response.lantanas[i].time)
+        }
         return response
         // ˄
     }
@@ -233,6 +236,9 @@ export class LantanaServerAPI {
         })
         const json = await res.json()
         const response: GetKmemosRelatedLantanaResponse = json
+        for (let i = 0; i < response.kmemos.length; i++) {
+            response.kmemos[i].time = new Date(response.kmemos[i].time)
+        }
         return response
         // ˄
     }
@@ -248,6 +254,9 @@ export class LantanaServerAPI {
         })
         const json = await res.json()
         const response: GetTagsRelatedLantanaResponse = json
+        for (let i = 0; i < response.tags.length; i++) {
+            response.tags[i].time = new Date(response.tags[i].time)
+        }
         return response
         // ˄
     }
@@ -263,14 +272,17 @@ export class LantanaServerAPI {
         })
         const json = await res.json()
         const response: GetTextsRelatedLantanaResponse = json
+        for (let i = 0; i < response.texts.length; i++) {
+            response.texts[i].time = new Date(response.texts[i].time)
+        }
         return response
         // ˄
     }
 
     async get_tags_related_kmemo(request: GetTagsRelatedKmemoRequest): Promise<GetTagsRelatedKmemoResponse> {
         // ˅
-        const res = await fetch(LantanaAPIAddress.get_tags_related_lantana_address, {
-            method: LantanaAPIAddress.get_tags_related_lantana_method,
+        const res = await fetch(LantanaAPIAddress.get_tags_related_kmemo_address, {
+            method: LantanaAPIAddress.get_tags_related_kmemo_method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -278,14 +290,17 @@ export class LantanaServerAPI {
         })
         const json = await res.json()
         const response: GetTagsRelatedKmemoResponse = json
+        for (let i = 0; i < response.tags.length; i++) {
+            response.tags[i].time = new Date(response.tags[i].time)
+        }
         return response
         // ˄
     }
 
     async get_texts_related_kmemo(request: GetTextsRelatedKmemoRequest): Promise<GetTextsRelatedKmemoResponse> {
         // ˅
-        const res = await fetch(LantanaAPIAddress.get_texts_related_lantana_address, {
-            method: LantanaAPIAddress.get_texts_related_lantana_method,
+        const res = await fetch(LantanaAPIAddress.get_texts_related_kmemo_address, {
+            method: LantanaAPIAddress.get_texts_related_kmemo_method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -293,6 +308,9 @@ export class LantanaServerAPI {
         })
         const json = await res.json()
         const response: GetTextsRelatedKmemoResponse = json
+        for (let i = 0; i < response.texts.length; i++) {
+            response.texts[i].time = new Date(response.texts[i].time)
+        }
         return response
         // ˄
     }

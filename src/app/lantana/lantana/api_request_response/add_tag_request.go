@@ -1,17 +1,21 @@
 // ˅
 package api_request_response
 
+import (
+	"github.com/mt3hr/rykv/tag"
+)
+
 // ˄
 
 type AddTagRequest struct {
 	// ˅
-	
+
 	// ˄
 
-	Tagt *tag.Tag
+	Tag *tag.Tag
 
 	// ˅
-	
+
 	// ˄
 }
 
