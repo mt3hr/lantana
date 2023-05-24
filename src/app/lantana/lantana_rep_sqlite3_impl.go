@@ -5,11 +5,15 @@ import (
 	"database/sql"
 	"embed"
 	"fmt"
+	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/mt3hr/rykv/kyou"
 )
+
+const TimeLayout = kyou.TimeLayout
 
 var (
 	//go:embed lantana/embed
@@ -106,23 +110,129 @@ type lantanaRepSQLite3Impl struct {
 }
 
 func (l *lantanaRepSQLite3Impl) GetAllLantanas(ctx context.Context) ([]*Lantana, error) {
-	panic("not implemented") // TODO: Implement
+	lantanas := []*Lantana{}
+	statement := sqlGetAllLantanas
+	rows, err := l.db.QueryContext(ctx, statement)
+	if err != nil {
+		err = fmt.Errorf("error at get all lantanas: %w", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+			lantana := &Lantana{}
+			createdTimeStr := ""
+			err := rows.Scan(&lantana.LantanaID, &createdTimeStr, &lantana.Mood)
+			if err != nil {
+				return nil, err
+			}
+
+			lantana.Time, err = time.Parse(TimeLayout, createdTimeStr)
+			if err != nil {
+				err = fmt.Errorf("error at parse time: %w", err)
+				return nil, err
+			}
+			lantanas = append(lantanas, lantana)
+		}
+	}
+	return lantanas, nil
 }
 
 func (l *lantanaRepSQLite3Impl) GetLantana(ctx context.Context, lantanaID string) (*Lantana, error) {
-	panic("not implemented") // TODO: Implement
+	statement := sqlGetLantana
+	row := l.db.QueryRowContext(ctx, statement, lantanaID)
+
+	lantana := &Lantana{}
+	createdTimeStr := ""
+	err := row.Scan(&lantana.LantanaID, &createdTimeStr, &lantana.Mood)
+	if err != nil {
+		return nil, err
+	}
+
+	lantana.Time, err = time.Parse(TimeLayout, createdTimeStr)
+	if err != nil {
+		err = fmt.Errorf("error at parse time: %w", err)
+		return nil, err
+	}
+	return lantana, nil
 }
 
 func (l *lantanaRepSQLite3Impl) AddLantana(ctx context.Context, lantana *Lantana) error {
-	panic("not implemented") // TODO: Implement
+	l.m.Lock()
+	defer l.m.Unlock()
+	statement := sqlAddLantana
+	_, err := l.db.Exec(statement, lantana.LantanaID, lantana.Time.Format(TimeLayout), lantana.Mood)
+	if err != nil {
+		err = fmt.Errorf("error at add lantana to to database %s: %w", l.filename, err)
+		return err
+	}
+	return nil
 }
 
 func (l *lantanaRepSQLite3Impl) SearchLantana(ctx context.Context, query *LantanaSearchQuery) ([]*Lantana, error) {
-	panic("not implemented") // TODO: Implement
+	lantanas := []*Lantana{}
+
+	statement := ""
+	switch *query.LantanaSearchType {
+	case All:
+		statement = sqlSearchLantanaAll
+	case Match:
+		statement = sqlSearchLantanaMatch
+	case GreaterThan:
+		statement = sqlSearchLantanaGreaterThan
+	case LessThan:
+		statement = sqlSearchLantanaLessThan
+	}
+
+	rows, err := l.db.QueryContext(ctx, statement, query.Mood)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+			lantana := &Lantana{}
+			createdTimeStr := ""
+			err := rows.Scan(&lantana.LantanaID, &createdTimeStr, &lantana.Mood)
+			if err != nil {
+				return nil, err
+			}
+
+			lantana.Time, err = time.Parse(TimeLayout, createdTimeStr)
+			if err != nil {
+				err = fmt.Errorf("error at parse time: %w", err)
+				return nil, err
+			}
+			lantanas = append(lantanas, lantana)
+		}
+	}
+
+	return lantanas, nil
 }
 
 func (l *lantanaRepSQLite3Impl) GetAllKyous(ctx context.Context) ([]*kyou.Kyou, error) {
-	panic("not implemented") // TODO: Implement
+	kyous := []*kyou.Kyou{}
+
+	lantanas, err := l.GetAllLantanas(ctx)
+	if err != nil {
+		return nil, err
+	}
+	for _, lantana := range lantanas {
+		kyous = append(kyous, &kyou.Kyou{
+			ID:          lantana.LantanaID,
+			Time:        lantana.Time,
+			RepName:     l.RepName(),
+			ImageSource: "",
+		})
+	}
+	return kyous, nil
 }
 
 func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (string, error) {
@@ -130,23 +240,34 @@ func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (
 }
 
 func (l *lantanaRepSQLite3Impl) GetPath(ctx context.Context, id string) (string, error) {
-	panic("not implemented") // TODO: Implement
+	return l.filename, nil
 }
 
 func (l *lantanaRepSQLite3Impl) Delete(id string) error {
-	panic("not implemented") // TODO: Implement
+	l.m.Lock()
+	defer l.m.Unlock()
+	statement := sqlDeleteLantana
+	_, err := l.db.Exec(statement, id)
+	if err != nil {
+		err = fmt.Errorf("error at delete lantana from database %s: %w", l.filename, err)
+		return err
+	}
+	return nil
 }
 
 func (l *lantanaRepSQLite3Impl) Close() error {
-	panic("not implemented") // TODO: Implement
+	return l.db.Close()
 }
 
 func (l *lantanaRepSQLite3Impl) Path() string {
-	panic("not implemented") // TODO: Implement
+	return l.filename
 }
 
 func (l *lantanaRepSQLite3Impl) RepName() string {
-	panic("not implemented") // TODO: Implement
+	base := filepath.Base(l.Path())
+	ext := filepath.Ext(base)
+	withoutExt := base[:len(base)-len(ext)]
+	return withoutExt
 }
 
 func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyou.Kyou, error) {
@@ -154,7 +275,7 @@ func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyo
 }
 
 func (l *lantanaRepSQLite3Impl) UpdateCache(ctx context.Context) error {
-	panic("not implemented") // TODO: Implement
+	return nil
 }
 
 func escapeSQLite(str string) string {
