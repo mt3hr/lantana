@@ -27,6 +27,7 @@ const (
 	GetTextsRelatedLantanaAddress  = "/api/get_texts_related_lantana"
 	GetTagsRelatedKmemoAddress     = "/api/get_tags_related_kmemo"
 	GetTextsRelatedKmemoAddress    = "/api/get_text_related_kmemo"
+	GetTagNamesAddress             = "/api/get_tag_names"
 	GetApplicationConfigAddress    = "/api/get_application_config"
 	LantanaMethod                  = "get"
 	LantanaViewerMethod            = "get"
@@ -44,6 +45,7 @@ const (
 	GetTextsRelatedLantanaMethod   = "post"
 	GetTagsRelatedKmemoMethod      = "post"
 	GetTextsRelatedKmemoMethod     = "post"
+	GetTagNamesMethod              = "post"
 	GetApplicationConfigMethod     = "post"
 )
 

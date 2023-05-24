@@ -4,6 +4,7 @@
 // ˄
 
 export class ApplicationConfig {
+[x: string]: any;
     // ˅
     
     // ˄

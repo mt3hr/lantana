@@ -36,6 +36,8 @@ import { GetTagsRelatedKmemoRequest } from "./get-tags-related-kmemo-request";
 import { GetTextsRelatedKmemoRequest } from "./get-texts-related-kmemo-request";
 import { GetTagsRelatedKmemoResponse } from "./get-tags-related-kmemo-response";
 import { GetTextsRelatedKmemoResponse } from "./get-texts-related-kmemo-response";
+import { GetTagNamesRequest } from "./get-tag-names-request";
+import { GetTagNamesResponse } from "./get-tag-names-response";
 
 // ˄
 
@@ -315,7 +317,18 @@ export class LantanaServerAPI {
         // ˄
     }
 
-
+    async get_tag_names(request: GetTagNamesRequest): Promise<GetTagNamesResponse> {
+        const res = await fetch(LantanaAPIAddress.get_tag_names_address, {
+            method: LantanaAPIAddress.get_tag_names_method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request),
+        })
+        const json = await res.json()
+        const response: GetTagNamesResponse= json
+        return response
+    }
 
     async get_application_config(request: GetApplicationConfigRequest): Promise<GetApplicationConfigResponse> {
         // ˅

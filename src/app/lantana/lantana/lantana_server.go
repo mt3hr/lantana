@@ -563,6 +563,43 @@ loop:
 	// ˄
 }
 
+func (l *LantanaServer) HandleGetTagNames(w http.ResponseWriter, r *http.Request) {
+	// ˅
+	w.Header().Set("Content-Type", "application/json")
+	request := &api_request_response.GetTagNamesRequest{}
+	response := &api_request_response.GetTagNamesResponse{}
+
+	defer r.Body.Close()
+	defer func() {
+		err := json.NewEncoder(w).Encode(response)
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	err := json.NewDecoder(r.Body).Decode(request)
+	if err != nil {
+		panic(err)
+	}
+
+	tagNamesList := []string{}
+	tags, err := tag.TagReps(l.Repositories.TagReps).GetAllTags(r.Context())
+	if err != nil {
+		response.Errors = append(response.Errors, "タグ名の取得に失敗しました")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	tagNames := map[string]struct{}{}
+	for _, tag := range tags {
+		tagNames[tag.Tag] = struct{}{}
+	}
+	for tagName := range tagNames {
+		tagNamesList = append(tagNamesList, tagName)
+	}
+	response.TagNames = tagNamesList
+	// ˄
+}
+
 func (l *LantanaServer) HandleGetApplicationConfig(w http.ResponseWriter, r *http.Request) {
 	// ˅
 	w.Header().Set("Content-Type", "application/json")
