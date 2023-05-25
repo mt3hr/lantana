@@ -1,13 +1,13 @@
 <template>
     <h2>タグ</h2>
     <table class="taglist">
-        <tag_struct ref="tag_struct_ref" :group_name="''" :struct="tag_structure" :open="true"
+        <tag_struct_view ref="tag_struct_ref" :group_name="''" :struct="tag_structure" :open="true"
             @updated_check_items_by_user="updated_checked_tags" @click_items_by_user="check_only_tags" />
     </table>
 </template>
 <script setup lang="ts">
 import { Ref, ref, watch, nextTick } from 'vue';
-import tag_struct from './tag_struct.vue';
+import tag_struct_view from './tag_struct_view.vue';
 import { ApplicationConfig } from '@/lantana_data/application-config';
 import { LantanaServerAPI } from '@/api_request_response/lantana-server-api';
 import { GetTagNamesRequest } from '@/api_request_response/get-tag-names-request';
@@ -25,7 +25,7 @@ const emits = defineEmits<{
 
 let tags: Ref<any> = ref([])
 let tag_structure: Ref<any> = ref({})
-const tag_struct_ref = ref<InstanceType<typeof tag_struct> | null>(null);
+const tag_struct_ref = ref<InstanceType<typeof tag_struct_view> | null>(null);
 const checked_tags: Ref<Array<string>> = ref(new Array<string>());
 
 defineExpose({

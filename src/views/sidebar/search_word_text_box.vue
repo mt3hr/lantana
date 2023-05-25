@@ -1,5 +1,5 @@
 <template>
-    <v-text-field v-model="search_word" :label="'検索'" @keypress.enter="emit_updated_search_word" />
+    <v-text-field class="search_word_text_field" v-model="search_word" :label="'検索'" @keypress.enter="emit_updated_search_word" />
 </template>
 
 <script setup lang="ts">
@@ -32,4 +32,13 @@ function emit_updated_search_word() {
 }
 </script>
 
-<style></style>
+<style>
+.search_word_text_field {
+    width: calc(50px * 5);
+    max-width: calc(50px * 5);
+    min-width: calc(50px * 5);
+    height: 56px;
+    max-height: 56px;
+    min-height: 56px;
+}
+</style>
