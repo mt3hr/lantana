@@ -2,14 +2,13 @@
     <v-dialog v-model="is_show" :width="500">
         <v-card class="pa-5">
             <v-card-title>
-                タグ追加
+                Lantana削除
             </v-card-title>
-            <v-text-field v-model="tag_name" @keypress.enter="submit" :autofocus="true" />
             <v-card-actions>
                 <v-row>
                     <v-col cols="auto">
-                        <v-btn @click="submit">
-                            追加
+                        <v-btn @click="delete_lantana" :autofocus="true">
+                            削除
                         </v-btn>
                     </v-col>
                     <v-spacer />
@@ -25,24 +24,21 @@
 </template>
 
 <script setup lang="ts">
-import { AddTagRequest } from '@/api_request_response/add-tag-request';
+import { DeleteLantanaRequest } from '@/api_request_response/delete-lantana-request';
 import { LantanaServerAPI } from '@/api_request_response/lantana-server-api';
-import generate_uuid from '@/generate_uuid';
-import { Kmemo } from '@/lantana_data/kmemo';
-import { Tag } from '@/lantana_data/tag';
+import { Lantana } from '@/lantana_data/lantana';
 import { Ref, ref, watch } from 'vue';
 
 interface Props {
-    kmemo: Kmemo
+    lantana: Lantana
 }
 
 const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
-    (e: 'added_tag'): void
+    (e: 'deleted_lantana', lantana: Lantana): void
 }>()
 
-let tag_name: Ref<string> = ref("")
 let is_show: Ref<boolean> = ref(false)
 
 defineExpose({ show })
@@ -54,41 +50,29 @@ watch(() => is_show.value, () => {
 function close_dialog() {
     is_show.value = false
 }
-function submit() {
-    if (tag_name.value == "") {
-        return
-    }
+function delete_lantana() {
     const api = new LantanaServerAPI()
-    const request = new AddTagRequest()
-    const tag = new Tag()
-    tag.id = generate_uuid()
-    tag.tag = tag_name.value
-    tag.target = props.kmemo.id
-    tag.time = new Date(Date.now())
-    request.tag = tag
-    api.add_tag(request)
+    const request = new DeleteLantanaRequest()
+    request.lantana_id = props.lantana.lantana_id
+    api.delete_lantana(request)
         .then(res => {
             if (res.errors && res.errors.length != 0) {
                 emit_errors(res.errors)
                 return
             }
-            emit_added_tag()
-            clear_fields()
+            emit_deleted_lantana(props.lantana)
             close_dialog()
         })
 }
 function show() {
     is_show.value = true
 }
-function clear_fields() {
-    tag_name.value = ""
-}
 
 function emit_errors(errors: Array<string>) {
     emits("errors", errors)
 }
-function emit_added_tag() {
-    emits("added_tag")
+function emit_deleted_lantana(deleted_lantana: Lantana) {
+    emits("deleted_lantana", deleted_lantana)
 }
 </script>
 
