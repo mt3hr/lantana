@@ -15,23 +15,24 @@
             </v-list-item>
         </v-list>
     </v-menu>
-    <add_tag_to_kmemo_dialog :kmemo="kmemo_info" ref="add_tag_dialog_ref" @errors="emit_errors" @added_tag="emit_added_tag" />
-    <add_text_to_kmemo_dialog :kmemo="kmemo_info" ref="add_text_dialog_ref" @errors="emit_errors"
+    <add_tag_to_kmemo_dialog :kmemo="kmemo" ref="add_tag_dialog_ref" @errors="emit_errors" @added_tag="emit_added_tag" />
+    <add_text_to_kmemo_dialog :kmemo="kmemo" ref="add_text_dialog_ref" @errors="emit_errors"
         @added_text="emit_added_text" />
-    <delete_kmemo_dialog :kmemo="kmemo_info" ref="delete_task_dialog_ref" @errors="emit_errors"
-        @deleted_task="emit_deleted_task" />
+    <delete_kmemo_dialog :kmemo="kmemo" ref="delete_kmemo_dialog_ref" @errors="emit_errors"
+        @deleted_kmemo="emit_deleted_kmemo" />
 </template>
 
 <script setup lang="ts">
-import { KmemoInfo } from '@/lantana_data/kmemo-info';
 import { Ref, ref, watch } from 'vue';
-import add_tag_to_kmemo_dialog from '../dialog/add_tag_dialog.vue';
-import add_text_to_kmemo_dialog from '../dialog/add_text_dialog.vue';
-import delete_kmemo_dialog from '../dialog/delete_task_dialog.vue';
+import add_tag_to_kmemo_dialog from '../dialog/add_tag_to_kmemo_dialog.vue';
+import add_text_to_kmemo_dialog from '../dialog/add_text_to_kmemo_dialog.vue';
+import delete_kmemo_dialog from '../dialog/delete_kmemo_dialog.vue';
 import { Kmemo } from '@/lantana_data/kmemo';
+import { Tag } from '@/lantana_data/tag';
+import { Text } from '@/lantana_data/text';
 
 interface Props {
-    kmemo_info: KmemoInfo
+    kmemo: Kmemo
     x: number
     y: number
 }
@@ -40,11 +41,9 @@ const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
     (e: 'copied_kmemo_id', kmemo: Kmemo): void
-    (e: 'added_tag'): void
-    (e: 'added_text'): void
+    (e: 'added_tag', tag: Tag): void
+    (e: 'added_text', text: Text): void
     (e: 'deleted_kmemo', kmemo: Kmemo): void
-    (e: 'deleted_tag'): void
-    (e: 'deleted_text'): void
 }>()
 
 let style: Ref<string> = ref(generate_style())
@@ -75,8 +74,8 @@ function show_add_text_dialog() {
     add_text_dialog_ref.value!.show()
 }
 function copy_kmemo_id_to_clipboard() {
-    navigator.clipboard.writeText(props.kmemo_info.kmemo.id)
-    emit_copied_task_id()
+    navigator.clipboard.writeText(props.kmemo.id)
+    emit_copied_kmemo_id()
 }
 function show_delete_kmemo_dialog() {
     delete_kmemo_dialog_ref.value!.show()
@@ -84,16 +83,16 @@ function show_delete_kmemo_dialog() {
 function emit_errors(errors: Array<string>) {
     emits("errors", errors)
 }
-function emit_copied_task_id() {
-    emits("copied_kmemo_id", props.kmemo_info.kmemo)
+function emit_copied_kmemo_id() {
+    emits("copied_kmemo_id", props.kmemo)
 }
-function emit_added_tag() {
-    emits("added_tag")
+function emit_added_tag(tag: Tag) {
+    emits("added_tag", tag)
 }
-function emit_added_text() {
-    emits("added_text")
+function emit_added_text(text: Text) {
+    emits("added_text", text)
 }
-function emit_deleted_task(deleted_kmemo_info: Kmemo) {
+function emit_deleted_kmemo(deleted_kmemo_info: Kmemo) {
     emits("deleted_kmemo", deleted_kmemo_info)
 }
 

@@ -12,7 +12,7 @@ type AddTextRequest struct {
 
 	// ˄
 
-	Text *text.Text
+	Text *text.Text `json:"text"`
 
 	// ˅
 

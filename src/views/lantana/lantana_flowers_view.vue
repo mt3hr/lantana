@@ -2,29 +2,41 @@
     <table>
         <tr class="lantana_icon_tr">
             <td class="lantana_icon_td">
-                <lantana_flower :state="flower_state1" @clicked_left="mood = 1" @clicked_right="mood = 2" />
+                <lantana_flower :editable="editable" :state="flower_state1" @clicked_left="mood = 1"
+                    @clicked_right="mood = 2" />
             </td>
             <td class="lantana_icon_td">
-                <lantana_flower :state="flower_state2" @clicked_left="mood = 3" @clicked_right="mood = 4" />
+                <lantana_flower :editable="editable" :state="flower_state2" @clicked_left="mood = 3"
+                    @clicked_right="mood = 4" />
             </td>
             <td class="lantana_icon_td">
-                <lantana_flower :state="flower_state3" @clicked_left="mood = 5" @clicked_right="mood = 6" />
+                <lantana_flower :editable="editable" :state="flower_state3" @clicked_left="mood = 5"
+                    @clicked_right="mood = 6" />
             </td>
             <td class="lantana_icon_td">
-                <lantana_flower :state="flower_state4" @clicked_left="mood = 7" @clicked_right="mood = 8" />
+                <lantana_flower :editable="editable" :state="flower_state4" @clicked_left="mood = 7"
+                    @clicked_right="mood = 8" />
             </td>
             <td class="lantana_icon_td">
-                <lantana_flower :state="flower_state5" @clicked_left="mood = 9" @clicked_right="mood = 10" />
+                <lantana_flower :editable="editable" :state="flower_state5" @clicked_left="mood = 9"
+                    @clicked_right="mood = 10" />
             </td>
         </tr>
     </table>
 </template>
 <script lang="ts" setup>
 import { Ref, ref, watch, nextTick, defineExpose } from 'vue';
-import LantanaFlowerState from './lantana_flower_state';
-import lantana_flower from './lantana_flower.vue';
+import LantanaFlowerState from '@/views/lantana/lantana_flower_state';
+import lantana_flower from '@/views/lantana/lantana_flower.vue';
 
-const mood: Ref<number> = ref(0)
+interface Props {
+    mood: number
+    editable: boolean
+}
+
+const props = defineProps<Props>()
+
+const mood: Ref<number> = ref(props.mood)
 const flower_state1: Ref<LantanaFlowerState> = ref(mood.value > 2 ? LantanaFlowerState.fill : (mood.value > 1 ? LantanaFlowerState.fill : LantanaFlowerState.half))
 const flower_state2: Ref<LantanaFlowerState> = ref(mood.value > 4 ? LantanaFlowerState.fill : (mood.value > 3 ? LantanaFlowerState.fill : LantanaFlowerState.half))
 const flower_state3: Ref<LantanaFlowerState> = ref(mood.value > 6 ? LantanaFlowerState.fill : (mood.value > 5 ? LantanaFlowerState.fill : LantanaFlowerState.half))
@@ -62,6 +74,8 @@ function emit_updated_mood() {
 <style scoped>
 .lantana_icon_tr {
     width: calc(50px * 5);
+    max-width: calc(50px * 5);
+    min-width: calc(50px * 5);
 }
 
 .lantana_icon_td {

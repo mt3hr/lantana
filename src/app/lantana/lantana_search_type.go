@@ -6,13 +6,13 @@ package lantana
 type LantanaSearchType int
 
 const (
-	All LantanaSearchType = iota + 1
+	All LantanaSearchType = 0
 
-	Match
+	Match LantanaSearchType = 1
 
-	GreaterThan
+	GreaterThan LantanaSearchType = 2
 
-	LessThan
+	LessThan LantanaSearchType = 3
 
 	// ˅
 

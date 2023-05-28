@@ -10,11 +10,11 @@ type Config struct {
 
 	// ˄
 
-	ApplicationConfig *api_request_response.ApplicationConfig
+	ApplicationConfig *api_request_response.ApplicationConfig `json:"application_config"`
 
-	ServerConfig *ServerConfig
+	ServerConfig *ServerConfig `json:"server_config"`
 
-	Reps *Reps
+	Reps *Reps `json:"reps"`
 
 	// ˅
 

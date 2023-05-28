@@ -10,9 +10,9 @@ type GetTagsRelatedLantanaResponse struct {
 
 	// ˄
 
-	Errors []string
+	Errors []string `json:"errors"`
 
-	Tags []*tag.Tag
+	Tags []*tag.Tag `json:"tags"`
 
 	// ˅
 

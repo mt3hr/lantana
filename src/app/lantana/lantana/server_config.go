@@ -8,11 +8,11 @@ type ServerConfig struct {
 
 	// ˄
 
-	LocalOnly bool
+	LocalOnly bool `json:"local_only"`
 
-	Address string
+	Address string `json:"address"`
 
-	TLS *TLS
+	TLS *TLS `json:"tls"`
 
 	// ˅
 

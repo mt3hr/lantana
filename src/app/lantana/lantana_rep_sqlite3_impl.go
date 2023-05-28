@@ -6,6 +6,7 @@ import (
 	"embed"
 	"fmt"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -175,11 +176,14 @@ func (l *lantanaRepSQLite3Impl) AddLantana(ctx context.Context, lantana *Lantana
 
 func (l *lantanaRepSQLite3Impl) SearchLantana(ctx context.Context, query *LantanaSearchQuery) ([]*Lantana, error) {
 	lantanas := []*Lantana{}
+	var q LantanaSearchQuery
+	q = *query
 
 	statement := ""
 	switch *query.LantanaSearchType {
 	case All:
-		statement = sqlSearchLantanaAll
+		statement = sqlSearchLantanaGreaterThan
+		q.Mood = 0
 	case Match:
 		statement = sqlSearchLantanaMatch
 	case GreaterThan:
@@ -188,7 +192,7 @@ func (l *lantanaRepSQLite3Impl) SearchLantana(ctx context.Context, query *Lantan
 		statement = sqlSearchLantanaLessThan
 	}
 
-	rows, err := l.db.QueryContext(ctx, statement, query.Mood)
+	rows, err := l.db.QueryContext(ctx, statement, q.Mood, q.Words)
 	if err != nil {
 		return nil, err
 	}
@@ -236,7 +240,13 @@ func (l *lantanaRepSQLite3Impl) GetAllKyous(ctx context.Context) ([]*kyou.Kyou, 
 }
 
 func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (string, error) {
-	panic("not implemented") // TODO: Implement
+	//TODO 画像にして
+	lantana, err := l.GetLantana(ctx, id)
+	if err != nil {
+		return "", err
+	}
+	contentHTML := fmt.Sprintf("<p>気分評価:%d</p>", lantana.Mood)
+	return contentHTML, nil
 }
 
 func (l *lantanaRepSQLite3Impl) GetPath(ctx context.Context, id string) (string, error) {
@@ -271,7 +281,49 @@ func (l *lantanaRepSQLite3Impl) RepName() string {
 }
 
 func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyou.Kyou, error) {
-	panic("not implemented") // TODO: Implement
+	kyous := []*kyou.Kyou{}
+
+	query := &LantanaSearchQuery{}
+	lantanaSearchType := All
+	query.LantanaSearchType = &lantanaSearchType
+
+	*query.LantanaSearchType = All
+	if strings.HasPrefix(word, "lantana=") {
+		*query.LantanaSearchType = Match
+		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana="), 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		query.Mood = int(mood)
+	} else if strings.HasPrefix(word, "lantana<=") {
+		*query.LantanaSearchType = LessThan
+		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana<="), 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		query.Mood = int(mood)
+	} else if strings.HasPrefix(word, "lantana>=") {
+		*query.LantanaSearchType = GreaterThan
+		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana>="), 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		query.Mood = int(mood)
+	}
+
+	lantanas, err := l.SearchLantana(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	for _, lantana := range lantanas {
+		kyous = append(kyous, &kyou.Kyou{
+			ID:          lantana.LantanaID,
+			Time:        lantana.Time,
+			RepName:     l.RepName(),
+			ImageSource: "",
+		})
+	}
+	return kyous, nil
 }
 
 func (l *lantanaRepSQLite3Impl) UpdateCache(ctx context.Context) error {

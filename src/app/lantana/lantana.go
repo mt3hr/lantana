@@ -10,11 +10,11 @@ type Lantana struct {
 
 	// ˄
 
-	LantanaID string
+	LantanaID string `json:"lantana_id"`
 
-	Mood int
+	Mood int `json:"mood"`
 
-	Time time.Time
+	Time time.Time `json:"time"`
 
 	// ˅
 

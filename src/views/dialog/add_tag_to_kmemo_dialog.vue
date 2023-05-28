@@ -39,7 +39,7 @@ interface Props {
 const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
-    (e: 'added_tag'): void
+    (e: 'added_tag', tag: Tag): void
 }>()
 
 let tag_name: Ref<string> = ref("")
@@ -72,7 +72,7 @@ function submit() {
                 emit_errors(res.errors)
                 return
             }
-            emit_added_tag()
+            emit_added_tag(tag)
             clear_fields()
             close_dialog()
         })
@@ -87,8 +87,8 @@ function clear_fields() {
 function emit_errors(errors: Array<string>) {
     emits("errors", errors)
 }
-function emit_added_tag() {
-    emits("added_tag")
+function emit_added_tag(tag: Tag) {
+    emits("added_tag", tag)
 }
 </script>
 

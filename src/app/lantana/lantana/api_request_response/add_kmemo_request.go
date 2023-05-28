@@ -10,7 +10,7 @@ type AddKmemoRequest struct {
 
 	// ˄
 
-	Kmemo *kmemo.Kmemo
+	Kmemo *kmemo.Kmemo `json:"kmemo"`
 
 	// ˅
 

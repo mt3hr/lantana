@@ -10,9 +10,9 @@ type GetTextsRelatedKmemoResponse struct {
 
 	// ˄
 
-	Errors []string
+	Errors []string `json:"errors"`
 
-	Texts []*text.Text
+	Texts []*text.Text `json:"texts"`
 
 	// ˅
 

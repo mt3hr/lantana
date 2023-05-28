@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { Text } from '@/lantana_data/text';
-import text_contextmenu from './text_contextmenu.vue';
+import text_contextmenu from './text_context_menu.vue';
 import { Ref, ref } from 'vue';
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
-    (e: 'deleted_text'): void
+    (e: 'deleted_text', text: Text): void
 }>()
 const contextmenu = ref<InstanceType<typeof text_contextmenu> | null>(null);
 
@@ -34,8 +34,8 @@ function show_contextmenu(e: MouseEvent) {
 function emit_errors(errors: Array<string>) {
     emits("errors", errors)
 }
-function emit_deleted_text() {
-    emits("deleted_text")
+function emit_deleted_text(text: Text) {
+    emits("deleted_text", text)
 }
 </script>
 

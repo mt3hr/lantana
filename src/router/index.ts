@@ -1,5 +1,5 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 const routes = [
   {
@@ -7,18 +7,21 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'Home',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/add_lantana_page.vue')
+        name: 'AddLantanaPage',
+        component: () => import('@/views/add_lantana_page.vue')
       },
+      {
+        path: '/lantana_log_viewer',
+        name: 'LantanaLogViewerPage',
+        component: () => import('@/views/lantana_log_viewer_page.vue'),
+      }
     ],
   },
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
+  // history: createWebHistory(process.env.BASE_URL),
   routes,
 })
 

@@ -10,9 +10,9 @@ type SearchLantanaResponse struct {
 
 	// ˄
 
-	Errors []string
+	Errors []string `json:"errors"`
 
-	Lantanas []*lantana.Lantana
+	Lantanas []*lantana.Lantana `json:"lantanas"`
 
 	// ˅
 

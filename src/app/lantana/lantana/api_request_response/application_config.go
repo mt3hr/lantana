@@ -8,11 +8,11 @@ type ApplicationConfig struct {
 
 	// ˄
 
-	HiddenTags []string
+	HiddenTags []string `json:"hidden_tags"`
 
-	UnCheckTags []string
+	UnCheckTags []string `json:"uncheck_tags"`
 
-	TagStruct interface{}
+	TagStruct interface{} `json:"tag_struct"`
 
 	// ˅
 

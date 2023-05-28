@@ -10,7 +10,7 @@ type AddLantanaRequest struct {
 
 	// ˄
 
-	Lantana *lantana.Lantana
+	Lantana *lantana.Lantana `json:"lantana"`
 
 	// ˅
 

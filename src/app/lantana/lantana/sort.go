@@ -3,10 +3,17 @@ package lantana
 import (
 	"sort"
 
+	"github.com/mt3hr/kmemo"
 	"github.com/mt3hr/lantana/src/app/lantana"
 	"github.com/mt3hr/rykv/tag"
 	"github.com/mt3hr/rykv/text"
 )
+
+func sortKmemoByContent(kmemos []*kmemo.Kmemo) {
+	sort.Slice(kmemos, func(i, j int) bool {
+		return kmemos[i].Content < kmemos[j].Content
+	})
+}
 
 func sortLantanasByTime(lantanas []*lantana.Lantana) {
 	sort.Slice(lantanas, func(i, j int) bool {

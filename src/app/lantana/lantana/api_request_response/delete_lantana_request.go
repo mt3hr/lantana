@@ -5,13 +5,13 @@ package api_request_response
 
 type DeleteLantanaRequest struct {
 	// ˅
-	
+
 	// ˄
 
-	LantanaID string
+	LantanaID string `json:"lantana_id"`
 
 	// ˅
-	
+
 	// ˄
 }
 

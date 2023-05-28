@@ -5,13 +5,13 @@ package api_request_response
 
 type DeleteKmemoResponse struct {
 	// ˅
-	
+
 	// ˄
 
-	Errors []string
+	Errors []string `json:"errors"`
 
 	// ˅
-	
+
 	// ˄
 }
 

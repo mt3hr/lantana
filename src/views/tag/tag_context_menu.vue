@@ -23,17 +23,17 @@ interface Props {
 const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
-    (e: 'deleted_tag'): void
+    (e: 'deleted_tag', tag: Tag): void
 }>()
 
 let style: Ref<string> = ref(generate_style())
 let is_show: Ref<boolean> = ref(false)
-defineExpose({show})
+defineExpose({ show })
 
-watch(() => props.x, ()=> {
+watch(() => props.x, () => {
     style.value = generate_style()
 })
-watch(() => props.y, ()=> {
+watch(() => props.y, () => {
     style.value = generate_style()
 })
 
@@ -53,7 +53,7 @@ function delete_tag() {
                 emit_errors(res.errors)
                 return
             }
-            emits("deleted_tag")
+            emits("deleted_tag", props.tag)
         })
 }
 
@@ -62,5 +62,4 @@ function emit_errors(errors: Array<string>) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

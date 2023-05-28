@@ -8,9 +8,9 @@ type GetTagNamesResponse struct {
 
 	// ˄
 
-	Errors []string
+	Errors []string `json:"errors"`
 
-	TagNames []string
+	TagNames []string `json:"tag_names"`
 
 	// ˅
 

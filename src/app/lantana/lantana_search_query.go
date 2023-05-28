@@ -8,13 +8,13 @@ type LantanaSearchQuery struct {
 
 	// ˄
 
-	Tags []string
+	Tags []string `json:"tags"`
 
-	Words string
+	Words string `json:"words"`
 
-	Mood int
+	Mood int `json:"mood"`
 
-	LantanaSearchType *LantanaSearchType
+	LantanaSearchType *LantanaSearchType `json:"lantana_search_type"`
 
 	// ˅
 

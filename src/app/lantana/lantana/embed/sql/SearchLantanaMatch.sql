@@ -3,6 +3,6 @@ SELECT
     Time,
     Mood
 FROM
-    lantana;
+    lantana
 WHERE
     Mood = ?;

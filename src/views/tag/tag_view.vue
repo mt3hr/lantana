@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { Tag } from '@/lantana_data/tag';
-import tag_contextmenu from './tag_contextmenu.vue';
+import tag_contextmenu from './tag_context_menu.vue';
 import { Ref, ref } from 'vue';
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
-    (e: 'deleted_tag'): void
+    (e: 'deleted_tag', tag: Tag): void
 }>()
 const contextmenu = ref<InstanceType<typeof tag_contextmenu> | null>(null);
 
@@ -34,25 +34,25 @@ function show_contextmenu(e: MouseEvent) {
 function emit_errors(errors: Array<string>) {
     emits("errors", errors)
 }
-function emit_deleted_tag() {
-    emits("deleted_tag")
+function emit_deleted_tag(tag: Tag) {
+    emits("deleted_tag", tag)
 }
 </script>
 
-<style scoped> 
-.tag {
-  border: solid white 2px;
-  border-left: 0px;
-  color: blue;
-  cursor : pointer;
-  padding: 0 6px 0 2px;
-  font-size: small;
-  border-radius: 0 1em 1em 0;
-  background: lightgray;
-  display: inline-flex;
-}
-.tag::before {
-  content: "・";
-  color: white;
-}
+<style scoped> .tag {
+     border: solid white 2px;
+     border-left: 0px;
+     color: blue;
+     cursor: pointer;
+     padding: 0 6px 0 2px;
+     font-size: small;
+     border-radius: 0 1em 1em 0;
+     background: lightgray;
+     display: inline-flex;
+ }
+
+ .tag::before {
+     content: "・";
+     color: white;
+ }
 </style>

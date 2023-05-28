@@ -10,7 +10,7 @@ type SearchLantanaRequest struct {
 
 	// ˄
 
-	Query *lantana.LantanaSearchQuery
+	Query *lantana.LantanaSearchQuery `json:"query"`
 
 	// ˅
 

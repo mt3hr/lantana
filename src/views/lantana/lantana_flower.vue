@@ -16,11 +16,12 @@
 </template>
 <script lang="ts" setup>
 import { Ref, ref, watch, nextTick, defineExpose } from 'vue';
-import LantanaFlowerState from './lantana_flower_state';
+import LantanaFlowerState from '@/views/lantana/lantana_flower_state';
 import lantana_icon from '/public/lantana_icon.png'
 
 interface Props {
     state: LantanaFlowerState
+    editable: boolean
 }
 const props = defineProps<Props>()
 const emits = defineEmits<{
@@ -29,10 +30,14 @@ const emits = defineEmits<{
 }>()
 
 function emit_clicked_left() {
-    emits('clicked_left')
+    if (props.editable) {
+        emits('clicked_left')
+    }
 }
 function emit_clicked_right() {
-    emits('clicked_right')
+    if (props.editable) {
+        emits('clicked_right')
+    }
 }
 </script>
 <style scoped>

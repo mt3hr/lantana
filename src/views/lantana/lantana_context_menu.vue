@@ -18,28 +18,29 @@
             </v-list-item>
         </v-list>
     </v-menu>
-    <add_kmemo_to_lantana_dialog :lantana="lantana_info" ref="add_kmemo_dialog_ref" @errors="emit_errors"
+    <add_kmemo_to_lantana_dialog :lantana="lantana" ref="add_kmemo_dialog_ref" @errors="emit_errors"
         @added_kmemo="emit_added_kmemo" />
-    <add_tag_to_lantana_dialog :lantana="lantana_info" ref="add_tag_dialog_ref" @errors="emit_errors"
+    <add_tag_to_lantana_dialog :lantana="lantana" ref="add_tag_dialog_ref" @errors="emit_errors"
         @added_tag="emit_added_tag" />
-    <add_text_to_lantana_dialog :lantana="lantana_info" ref="add_text_dialog_ref" @errors="emit_errors"
+    <add_text_to_lantana_dialog :lantana="lantana" ref="add_text_dialog_ref" @errors="emit_errors"
         @added_text="emit_added_text" />
-    <delete_lantana_dialog :lantana="lantana_info" ref="delete_task_dialog_ref" @errors="emit_errors"
-        @deleted_task="emit_deleted_task" />
+    <delete_lantana_dialog :lantana="lantana" ref="delete_lantana_dialog_ref" @errors="emit_errors"
+        @deleted_lantana="emit_deleted_lantana" />
 </template>
 
 <script setup lang="ts">
-import { LantanaInfo } from '@/lantana_data/lantana-info';
 import { Ref, ref, watch } from 'vue';
-import add_tag_to_lantana_dialog from '../dialog/add_tag_dialog.vue';
+import add_tag_to_lantana_dialog from '../dialog/add_tag_to_lantana_dialog.vue';
 import add_kmemo_to_lantana_dialog from '../dialog/add_kmemo_to_lantana_dialog.vue';
-import add_text_to_lantana_dialog from '../dialog/add_text_dialog.vue';
-import delete_lantana_dialog from '../dialog/delete_task_dialog.vue';
+import add_text_to_lantana_dialog from '../dialog/add_text_to_lantana_dialog.vue';
+import delete_lantana_dialog from '../dialog/delete_lantana_dialog.vue';
 import { Lantana } from '@/lantana_data/lantana';
 import { Kmemo } from '@/lantana_data/kmemo';
+import { Tag } from '@/lantana_data/tag';
+import { Text } from '@/lantana_data/text';
 
 interface Props {
-    lantana_info: LantanaInfo
+    lantana: Lantana
     x: number
     y: number
 }
@@ -48,12 +49,10 @@ const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
     (e: 'copied_lantana_id', lantana: Lantana): void
-    (e: 'added_tag'): void
-    (e: 'added_text'): void
     (e: 'added_kmemo', kmemo: Kmemo): void
+    (e: 'added_tag', tag: Tag): void
+    (e: 'added_text', text: Text): void
     (e: 'deleted_lantana', lantana: Lantana): void
-    (e: 'deleted_tag'): void
-    (e: 'deleted_text'): void
 }>()
 
 let style: Ref<string> = ref(generate_style())
@@ -88,8 +87,8 @@ function show_add_text_dialog() {
     add_text_dialog_ref.value!.show()
 }
 function copy_lantana_id_to_clipboard() {
-    navigator.clipboard.writeText(props.lantana_info.lantana.lantana_id)
-    emit_copied_task_id()
+    navigator.clipboard.writeText(props.lantana.lantana_id)
+    emit_copied_lantana_id()
 }
 function show_delete_lantana_dialog() {
     delete_lantana_dialog_ref.value!.show()
@@ -97,19 +96,19 @@ function show_delete_lantana_dialog() {
 function emit_errors(errors: Array<string>) {
     emits("errors", errors)
 }
-function emit_copied_task_id() {
-    emits("copied_lantana_id", props.lantana_info.lantana)
+function emit_copied_lantana_id() {
+    emits("copied_lantana_id", props.lantana)
 }
 function emit_added_kmemo(kmemo: Kmemo) {
     emits("added_kmemo", kmemo)
 }
-function emit_added_tag() {
-    emits("added_tag")
+function emit_added_tag(tag: Tag) {
+    emits("added_tag", tag)
 }
-function emit_added_text() {
-    emits("added_text")
+function emit_added_text(text: Text) {
+    emits("added_text", text)
 }
-function emit_deleted_task(deleted_lantana_info: Lantana) {
+function emit_deleted_lantana(deleted_lantana_info: Lantana) {
     emits("deleted_lantana", deleted_lantana_info)
 }
 

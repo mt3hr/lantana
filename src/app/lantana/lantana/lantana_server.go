@@ -43,6 +43,16 @@ type LantanaServer struct {
 	// ˄
 }
 
+func init() {
+}
+
+func NewLantanaServer() *LantanaServer {
+	return &LantanaServer{
+		Config:       &Config{},
+		Repositories: &Repositories{},
+	}
+}
+
 func (l *LantanaServer) HandleAddLantanaPage(w http.ResponseWriter, r *http.Request) {
 	// ˅
 	http.RedirectHandler(AddLantanaPageAddress, http.StatusFound).ServeHTTP(w, r)
@@ -50,6 +60,12 @@ func (l *LantanaServer) HandleAddLantanaPage(w http.ResponseWriter, r *http.Requ
 }
 
 func (l *LantanaServer) HandleLantanaViewerPage(w http.ResponseWriter, r *http.Request) {
+	// ˅
+	l.HandleLantanaViewerPageQ(w, r)
+	// ˄
+}
+
+func (l *LantanaServer) HandleLantanaViewerPageQ(w http.ResponseWriter, r *http.Request) {
 	// ˅
 	http.RedirectHandler(LantanaLogViewerPageAddress, http.StatusFound).ServeHTTP(w, r)
 	// ˄
@@ -76,14 +92,16 @@ func (l *LantanaServer) HandleSearchLantana(w http.ResponseWriter, r *http.Reque
 
 	words, notWords := parseWords(request.Query.Words)
 
-	lantanas, err := filterWords(r.Context(), l.Repositories.LantanaReps, l.Repositories.TextReps, words, notWords, false, request.Query)
+	lantanas, err := filterWords(r.Context(), l.Repositories.LantanaReps, l.Repositories.TextReps, l.Repositories.KmemoReps, words, notWords, false, request.Query)
 	if err != nil {
+		panic(err)
 		err = fmt.Errorf("lantana検索に失敗しました")
 		response.Errors = append(response.Errors, err.Error())
 		return
 	}
 	lantanas, err = filterTags(r.Context(), lantanas, l.Repositories.TagReps, request.Query.Tags, Or, l.Config)
 	if err != nil {
+		panic(err)
 		err = fmt.Errorf("lantana検索に失敗しました")
 		response.Errors = append(response.Errors, err.Error())
 		return
@@ -353,6 +371,8 @@ func (l *LantanaServer) HandleGetKmemosRelatedLantana(w http.ResponseWriter, r *
 		return
 	}
 
+	sortKmemoByContent(relatedKmemos)
+
 	response.Kmemos = relatedKmemos
 	// ˄
 }
@@ -376,7 +396,7 @@ func (l *LantanaServer) HandleGetTagsRelatedLantana(w http.ResponseWriter, r *ht
 		panic(err)
 	}
 
-	tags, err := tag.TagReps(l.Repositories.TagReps).GetTagsByName(r.Context(), request.LantanaID)
+	tags, err := tag.TagReps(l.Repositories.TagReps).GetTagsByTarget(r.Context(), request.LantanaID)
 	if err != nil {
 		response.Errors = append(response.Errors, "タグ取得に失敗しました")
 		return
@@ -710,20 +730,25 @@ func (l *LantanaServer) LoadConfig() error {
 	}
 
 	// 各DBファイルの作成
-	if l.Repositories.LantanaRep == nil {
+	if l.Config.Reps.LantanaRep == nil {
 		err := fmt.Errorf("configファイルのRepositories.LantanaRepの項目が設定されていないかあるいは不正です")
 		return err
 	}
-	if l.Repositories.TagRep == nil {
+	if l.Config.Reps.KmemoRep == nil {
+		err := fmt.Errorf("configファイルのRepositories.KmemoRepの項目が設定されていないかあるいは不正です")
+		return err
+	}
+	if l.Config.Reps.TagRep == nil {
 		err := fmt.Errorf("configファイルのRepositories.TagRepの項目が設定されていないかあるいは不正です")
 		return err
 	}
-	if l.Repositories.TextRep == nil {
+	if l.Config.Reps.TextRep == nil {
 		err := fmt.Errorf("configファイルのRepositories.TextRepの項目が設定されていないかあるいは不正です")
 		return err
 	}
 	files := []string{
 		os.ExpandEnv(l.Config.Reps.LantanaRep.File),
+		os.ExpandEnv(l.Config.Reps.KmemoRep.File),
 		os.ExpandEnv(l.Config.Reps.TagRep.File),
 		os.ExpandEnv(l.Config.Reps.TextRep.File),
 	}
@@ -997,21 +1022,21 @@ Reps:
   # Lantana記録時の保存先データベースファイル
   LantanaRep:
     type: lantana_db
-	file: $HOME/Lantana.db
+    file: $HOME/Lantana.db
 
   # Lantana情報源データベースファイル郡
   LantanaReps:
   - type: lantana_db
-	file: $HOME/Lantana.db
+    file: $HOME/Lantana.db
 
   # Kmemo記録時の保存先データベースファイル
   KmemoRep:
-    type: db
+    type: kmemo_db
     file: $HOME/Kmemo.db
 
   # Kmemo情報源先データベースファイル郡
   KmemoReps:
-  - type: db
+  - type: kmemo_db
     file: $HOME/Kmemo.db
 
   # タグ記録時の保存先データベースファイル
@@ -1056,6 +1081,7 @@ func (l *LantanaServer) LaunchServer() error {
 	router.PathPrefix(GetTagsRelatedKmemoAddress).HandlerFunc(l.HandleGetTagsRelatedKmemo)
 	router.PathPrefix(GetTextsRelatedKmemoAddress).HandlerFunc(l.HandleGetTextsRelatedKmemo)
 	router.PathPrefix(GetApplicationConfigAddress).HandlerFunc(l.HandleGetApplicationConfig)
+	router.PathPrefix(GetTagNamesAddress).HandlerFunc(l.HandleGetTagNames)
 
 	addLantanaPage, err := fs.Sub(lantana.EmbedDir, "lantana/embed/html")
 	if err != nil {

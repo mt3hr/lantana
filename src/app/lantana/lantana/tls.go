@@ -8,11 +8,11 @@ type TLS struct {
 
 	// ˄
 
-	Enable bool
+	Enable bool `json:"enable"`
 
-	CertFile string
+	CertFile string `json:"cert_file"`
 
-	KeyFile string
+	KeyFile string `json:"key_file"`
 
 	// ˅
 

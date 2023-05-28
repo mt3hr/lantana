@@ -28,7 +28,7 @@ func init() {
 }
 
 var (
-	lantanaServer = &lantana.LantanaServer{}
+	lantanaServer = lantana.NewLantanaServer()
 	appCmd        = &cobra.Command{
 		Use: "lantana",
 		PersistentPreRun: func(_ *cobra.Command, _ []string) {

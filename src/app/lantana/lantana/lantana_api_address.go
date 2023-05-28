@@ -13,6 +13,7 @@ type LantanaAPIAddress string
 const (
 	AddLantanaPageAddress          = "/"
 	LantanaLogViewerPageAddress    = "/lantana_log_viewer"
+	LantanaLogViewerPageAddressQ   = "/?page=lantana_log_viewer"
 	SearchLantanaAddress           = "/api/search_lantana"
 	AddLantanaAddress              = "/api/add_lantana"
 	DeleteLantanaAddress           = "/api/delete_lantana"
@@ -26,7 +27,7 @@ const (
 	GetTagsRelatedLantanaAddress   = "/api/get_tags_related_lantana"
 	GetTextsRelatedLantanaAddress  = "/api/get_texts_related_lantana"
 	GetTagsRelatedKmemoAddress     = "/api/get_tags_related_kmemo"
-	GetTextsRelatedKmemoAddress    = "/api/get_text_related_kmemo"
+	GetTextsRelatedKmemoAddress    = "/api/get_texts_related_kmemo"
 	GetTagNamesAddress             = "/api/get_tag_names"
 	GetApplicationConfigAddress    = "/api/get_application_config"
 	LantanaMethod                  = "get"

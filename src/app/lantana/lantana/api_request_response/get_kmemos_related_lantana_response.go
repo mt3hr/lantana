@@ -10,9 +10,9 @@ type GetKmemosRelatedLantanaResponse struct {
 
 	// ˄
 
-	Errors []string
+	Errors []string `json:"errors"`
 
-	Kmemos []*kmemo.Kmemo
+	Kmemos []*kmemo.Kmemo `json:"kmemos"`
 
 	// ˅
 

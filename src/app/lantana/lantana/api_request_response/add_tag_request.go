@@ -12,7 +12,7 @@ type AddTagRequest struct {
 
 	// ˄
 
-	Tag *tag.Tag
+	Tag *tag.Tag `json:"tag"`
 
 	// ˅
 

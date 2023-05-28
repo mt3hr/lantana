@@ -23,7 +23,7 @@ interface Props {
 const props = defineProps<Props>()
 const emits = defineEmits<{
     (e: 'errors', errors: Array<string>): void
-    (e: 'deleted_text'): void
+    (e: 'deleted_text', text: Text): void
 }>()
 
 let style: Ref<string> = ref(generate_style())
@@ -53,7 +53,7 @@ function delete_text() {
                 emit_errors(res.errors)
                 return
             }
-            emits("deleted_text")
+            emits("deleted_text", props.text)
         })
 }
 

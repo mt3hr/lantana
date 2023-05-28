@@ -49,7 +49,7 @@ export class LantanaServerAPI {
     async search_lantana(request: SearchLantanaRequest): Promise<SearchLantanaResponse> {
         // ˅
         const res = await fetch(LantanaAPIAddress.search_lantana_address, {
-            method: LantanaAPIAddress.search_lantana_address,
+            method: LantanaAPIAddress.search_lantana_method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -72,7 +72,10 @@ export class LantanaServerAPI {
         const get_kmemos_related_lantana_request = new GetKmemosRelatedLantanaRequest()
         get_kmemos_related_lantana_request.lantana_id = lantana.lantana_id
         const get_kmemos_related_lantana_response = await this.get_kmemos_related_lantana(get_kmemos_related_lantana_request)
-        response.kmemos = get_kmemos_related_lantana_response.kmemos
+        for (let i = 0; i < get_kmemos_related_lantana_response.kmemos.length; i++) {
+            const kmemo_info = await this.get_kmemo_info(get_kmemos_related_lantana_response.kmemos[i])
+            response.kmemo_infos.push(kmemo_info)
+        }
 
         const get_tags_related_lantana_request = new GetTagsRelatedLantanaRequest()
         get_tags_related_lantana_request.lantana_id = lantana.lantana_id

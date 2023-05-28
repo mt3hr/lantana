@@ -8,9 +8,9 @@ type GetApplicationConfigResponse struct {
 
 	// ˄
 
-	Errors []string
+	Errors []string `json:"errors"`
 
-	ApplicationConfig *ApplicationConfig
+	ApplicationConfig *ApplicationConfig `json:"application_config"`
 
 	// ˅
 

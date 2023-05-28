@@ -6,7 +6,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/mt3hr/kmemo"
 	"github.com/mt3hr/lantana/src/app/lantana"
+	"github.com/mt3hr/rykv"
 	"github.com/mt3hr/rykv/tag"
 	"github.com/mt3hr/rykv/text"
 )
@@ -40,11 +42,11 @@ func filterReps(ctx context.Context, reps []lantana.LantanaRep, repNames []strin
 }
 
 // kyou := map[kyou.id]
-func filterWords(ctx context.Context, reps []lantana.LantanaRep, textReps []text.TextRep, words []string, notWords []string, and bool, query *lantana.LantanaSearchQuery) (map[string]*lantana.Lantana, error) {
+func filterWords(ctx context.Context, reps []lantana.LantanaRep, textReps []text.TextRep, kmemoReps []kmemo.KmemoRep, words []string, notWords []string, and bool, query *lantana.LantanaSearchQuery) (map[string]*lantana.Lantana, error) {
 	matchKyous := map[string]*lantana.Lantana{}
 	// wordsがないときにはRep内のすべてのLantanaID
 	if len(words) == 0 {
-		allKyous, err := lantana.LantanaReps(reps).GetAllLantanas(ctx)
+		allKyous, err := lantana.LantanaReps(reps).SearchLantana(ctx, query)
 		if err != nil {
 			err = fmt.Errorf("error at get all kyous: %w", err)
 			return nil, err
@@ -59,7 +61,7 @@ func filterWords(ctx context.Context, reps []lantana.LantanaRep, textReps []text
 
 		// notWordsにhitしたものを外す
 		if len(notWords) != 0 {
-			notMatchKyous, err := orSearch(ctx, reps, textReps, notWords, query)
+			notMatchKyous, err := orSearch(ctx, reps, textReps, kmemoReps, notWords, query)
 			if err != nil {
 				err := fmt.Errorf("error at orSearch: %w", err)
 				return nil, err
@@ -86,7 +88,7 @@ func filterWords(ctx context.Context, reps []lantana.LantanaRep, textReps []text
 			return nil, err
 		}
 	} else {
-		kyous, err = orSearch(ctx, reps, textReps, words, query)
+		kyous, err = orSearch(ctx, reps, textReps, kmemoReps, words, query)
 		if err != nil {
 			err = fmt.Errorf("failed to or search: %w", err)
 			return nil, err
@@ -101,7 +103,7 @@ func filterWords(ctx context.Context, reps []lantana.LantanaRep, textReps []text
 	}
 
 	// notWordsにhitしたものを外す
-	notLantanaIDs, err := orSearch(ctx, reps, textReps, notWords, query)
+	notLantanaIDs, err := orSearch(ctx, reps, textReps, kmemoReps, notWords, query)
 	if err != nil {
 		err := fmt.Errorf("error at orSearch: %w", err)
 		return nil, err
@@ -114,24 +116,42 @@ func filterWords(ctx context.Context, reps []lantana.LantanaRep, textReps []text
 	return matchKyous, nil
 }
 
-func orSearch(ctx context.Context, reps []lantana.LantanaRep, textReps []text.TextRep, words []string, query *lantana.LantanaSearchQuery) ([]*lantana.Lantana, error) {
-	matchKyous := []*lantana.Lantana{}
-	allKyous, err := lantana.LantanaReps(reps).GetAllLantanas(ctx)
+func orSearch(ctx context.Context, reps []lantana.LantanaRep, textReps []text.TextRep, kmemoReps []kmemo.KmemoRep, words []string, query *lantana.LantanaSearchQuery) ([]*lantana.Lantana, error) {
+	// repにSearchしてヒットしたもの
+	lantanas := []*lantana.Lantana{}
+
+	allLantanas, err := lantana.LantanaReps(reps).GetAllLantanas(ctx)
 	if err != nil {
-		err = fmt.Errorf("error at get all kyous: %w", err)
 		return nil, err
 	}
-	// repにSearchしてヒットしたもの
+	allLantanasTimeMap := map[int64]*lantana.Lantana{}
+	for _, lantana := range allLantanas {
+		allLantanasTimeMap[lantana.Time.Unix()] = lantana
+	}
+
+	matchLantanas, err := lantana.LantanaReps(reps).SearchLantana(ctx, query)
+	if err != nil {
+		err = fmt.Errorf("error at search: %w", err)
+		return nil, err
+	}
+
+	// kmemoに検索してヒットしたもの
+	rykvRepsWrap := rykv.Reps{}
+	for _, kmemoRep := range kmemoReps {
+		rykvRepsWrap = append(rykvRepsWrap, kmemoRep)
+	}
 	for _, word := range words {
-		q := *query
-		q.Words = word
-		matchKyousInRep, err := lantana.LantanaReps(reps).SearchLantana(ctx, &q)
+		matchKmemoKyous, err := rykv.Reps(rykvRepsWrap).Search(ctx, word)
 		if err != nil {
-			err = fmt.Errorf("error at search %s: %w", word, err)
 			return nil, err
 		}
-		matchKyous = append(matchKyous, matchKyousInRep...)
+		for _, kmemoKyou := range matchKmemoKyous {
+			if lantana, exist := allLantanasTimeMap[kmemoKyou.Time.Unix()]; exist {
+				lantanas = append(lantanas, lantana)
+			}
+		}
 	}
+
 	//textRepにSearchしてヒットしたもの
 	for _, word := range words {
 		matchTexts, err := text.TextReps(textReps).Search(ctx, word)
@@ -140,22 +160,22 @@ func orSearch(ctx context.Context, reps []lantana.LantanaRep, textReps []text.Te
 			return nil, err
 		}
 		for _, text := range matchTexts {
-			for _, kyou := range allKyous {
+			for _, kyou := range matchLantanas {
 				if kyou.LantanaID == text.Target {
-					matchKyous = append(matchKyous, kyou)
+					lantanas = append(lantanas, kyou)
 				}
 			}
 		}
 	}
 	// idが完全に一致するものも
-	for _, kyou := range allKyous {
+	for _, kyou := range matchLantanas {
 		for _, word := range words {
 			if kyou.LantanaID == word {
-				matchKyous = append(matchKyous, kyou)
+				lantanas = append(lantanas, kyou)
 			}
 		}
 	}
-	return matchKyous, nil
+	return lantanas, nil
 }
 
 func andSearch(ctx context.Context, reps []lantana.LantanaRep, textReps []text.TextRep, words []string, query *lantana.LantanaSearchQuery) ([]*lantana.Lantana, error) {
@@ -180,7 +200,8 @@ func andSearch(ctx context.Context, reps []lantana.LantanaRep, textReps []text.T
 	}
 
 	for _, word := range words {
-		q := *query
+		var q lantana.LantanaSearchQuery
+		q = *query
 		q.Words = word
 		kyous, err := lantana.LantanaReps(reps).SearchLantana(ctx, &q)
 		if err != nil {

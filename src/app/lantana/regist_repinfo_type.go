@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/mattn/go-zglob"
+	"github.com/mt3hr/kmemo"
 	"github.com/mt3hr/rykv/tag"
 	"github.com/mt3hr/rykv/text"
 )
@@ -22,6 +23,23 @@ func init() {
 			rep, err := NewLantanaRepSQLite(match)
 			if err != nil {
 				err = fmt.Errorf("failed to NewLantanaRepSQLite %s: %w", match, err)
+				return nil, err
+			}
+			reps = append(reps, rep)
+		}
+		return reps, nil
+	}
+
+	kmemo.KmemoRepFactories["kmemo_db"] = func(contentFile string) ([]kmemo.KmemoRep, error) {
+		reps := []kmemo.KmemoRep{}
+
+		contentFile = os.ExpandEnv(contentFile)
+		matches, _ := zglob.Glob(contentFile)
+		sort.Strings(matches)
+		for _, match := range matches {
+			rep, err := kmemo.NewKmemoRepSQLite(match)
+			if err != nil {
+				err = fmt.Errorf("error at new kmemo rep sqlite %s: %w", match, err)
 				return nil, err
 			}
 			reps = append(reps, rep)

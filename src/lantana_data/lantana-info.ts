@@ -1,7 +1,7 @@
 // ˅
 'use strict';
 
-import { Kmemo } from './kmemo';
+import { KmemoInfo } from './kmemo-info';
 import { Lantana } from './lantana';
 import { Tag } from './tag';
 import { Text } from './text';
@@ -10,12 +10,12 @@ import { Text } from './text';
 
 export class LantanaInfo {
     // ˅
-    
+
     // ˄
 
     lantana: Lantana;
 
-    kmemos: Array<Kmemo>;
+    kmemo_infos: Array<KmemoInfo>;
 
     tags: Array<Tag>;
 
@@ -24,14 +24,14 @@ export class LantanaInfo {
     constructor() {
         // ˅
         this.lantana = new Lantana()
-        this.kmemos = new Array<Kmemo>()
+        this.kmemo_infos = new Array<KmemoInfo>()
         this.tags = new Array<Tag>()
         this.texts = new Array<Text>()
         // ˄
     }
 
     // ˅
-    
+
     // ˄
 }
 
