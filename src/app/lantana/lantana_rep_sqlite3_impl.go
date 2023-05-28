@@ -255,6 +255,9 @@ func (l *lantanaRepSQLite3Impl) GetAllKyous(ctx context.Context) ([]*kyou.Kyou, 
 
 func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (string, error) {
 	contentHTML := `<style>
+.lantana {
+  display: flex;
+}
 .lantana_icon {
   position: relative;
   width: 50px !important;
@@ -295,29 +298,31 @@ func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (
 }
 </style>
 `
+	contentHTML += `<div class="lantana">`
 	lantana, err := l.GetLantana(ctx, id)
 	if err != nil {
 		return "", err
 	}
 	i := 0
 	for ; i < lantana.Mood; i++ {
-		contentHTML += `<div class="lantana_icon">`
 		if i%2 == 0 {
+			contentHTML += `<div class="lantana_icon">`
 			contentHTML += `<img class="lantana_icon_left" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
 		} else {
 			contentHTML += `<img class="lantana_icon_right" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
+			contentHTML += "</div>"
 		}
-		contentHTML += "</div>"
 	}
 	for ; i < 10; i++ {
-		contentHTML += `<div class="lantana_icon">`
 		if i%2 == 0 {
+			contentHTML += `<div class="lantana_icon">`
 			contentHTML += `<img class="lantana_icon_left gray" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
 		} else {
 			contentHTML += `<img class="lantana_icon_right gray" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
+			contentHTML += "</div>"
 		}
-		contentHTML += "</div>"
 	}
+	contentHTML += "</div>"
 	return contentHTML, nil
 }
 
