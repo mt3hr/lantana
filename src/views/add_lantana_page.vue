@@ -6,7 +6,7 @@
     </v-app-bar>
 
     <v-main class="main">
-        <add_lantana_view class="add_lantana_view" :option="option" :is_dialog="false" />
+        <add_lantana_view class="add_lantana_view" :option="option" :is_dialog="false" @added_lantana="added_lantana"/>
     </v-main>
     <v-snackbar v-model="is_show_message_snackbar">
         <v-container class="ma-0 pa-0">
@@ -30,6 +30,7 @@ import { LantanaServerAPI } from '@/api_request_response/lantana-server-api';
 import { GetApplicationConfigRequest } from '@/api_request_response/get-application-config-request';
 import { LantanaAPIAddress } from '@/api_request_response/lantana-api-address';
 import { useRoute, useRouter } from 'vue-router';
+import { Lantana } from '@/lantana_data/lantana';
 
 const route = useRoute()
 const router = useRouter()
@@ -69,6 +70,9 @@ async function write_messages(messages: Array<string>) {
         write_message(message_)
         is_first = false
     }
+}
+function added_lantana(lantana: Lantana) {
+    write_message("lantanaを追加しました")
 }
 </script>
 

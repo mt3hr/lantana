@@ -3,7 +3,7 @@
         <v-card-title>
             Lantana追加
         </v-card-title>
-        <lantana_flowers_view :mood="0" :editable="true" @updated_mood="update_mood" />
+        <lantana_flowers_view :mood="mood" :editable="true" @updated_mood="update_mood" ref="lantana_flowers_view_ref"/>
         <add_text_to_lantana_view v-for="(text_data, index) in text_datas_dummy" :key="text_data.text_id"
             @errors="emit_errors" @updated_text_data="(text_data) => update_text_data(index, text_data)"
             @delete_text_request="delete_text_data(text_data.text_id)" />
@@ -64,6 +64,7 @@ const emits = defineEmits<{
     (e: 'added_text', text: Text): void
     (e: 'request_close_dialog'): void
 }>()
+const lantana_flowers_view_ref = ref<InstanceType<typeof lantana_flowers_view> | null>(null);
 const text_datas: Ref<Array<AddTextToLantanaData>> = ref(new Array<AddTextToLantanaData>())
 const text_datas_dummy: Ref<Array<AddTextToLantanaData>> = ref(new Array<AddTextToLantanaData>())
 const mood: Ref<number> = ref(0)
@@ -152,6 +153,7 @@ async function submit(): Promise<null> {
             emits("added_text", text)
         }
     }
+    clear_fields()
     finish()
     return new Promise<null>((resolve) => { })
 }
@@ -161,6 +163,12 @@ function finish() {
     } else {
         close_page()
     }
+}
+function clear_fields() {
+    text_datas.value = new Array<AddTextToLantanaData>()
+    text_datas_dummy.value = new Array<AddTextToLantanaData>()
+    mood.value = 0
+    lantana_flowers_view_ref.value?.set_mood(0)
 }
 function update_mood(mood_: number) {
     mood.value = mood_
