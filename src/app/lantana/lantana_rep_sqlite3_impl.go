@@ -4,7 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"encoding/base64"
 	"fmt"
+	"io"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -28,6 +30,7 @@ var (
 	sqlSearchLantanaGreaterThan string
 	sqlSearchLantanaLessThan    string
 	sqlSearchLantanaMatch       string
+	lantanaIconBase64           string
 )
 
 func init() {
@@ -84,6 +87,17 @@ func init() {
 		panic(err)
 	}
 	sqlSearchLantanaMatch = string(sqlSearchLantanaMatchb)
+
+	lantanaIconFile, err := EmbedDir.Open("lantana/embed/img/favicon.png")
+	if err != nil {
+		panic(err)
+	}
+	defer lantanaIconFile.Close()
+	b, err := io.ReadAll(lantanaIconFile)
+	if err != nil {
+		panic(err)
+	}
+	lantanaIconBase64 = base64.RawStdEncoding.EncodeToString(b)
 }
 
 func NewLantanaRepSQLite(dbFileName string) (LantanaRep, error) {
@@ -240,12 +254,70 @@ func (l *lantanaRepSQLite3Impl) GetAllKyous(ctx context.Context) ([]*kyou.Kyou, 
 }
 
 func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (string, error) {
-	//TODO 画像にして
+	contentHTML := `<style>
+.lantana_icon {
+  position: relative;
+  width: 50px !important;
+  max-width: 50px !important;
+  min-width: 50px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  min-height: 50px !important;
+}
+.lantana_icon_left {
+  position: absolute;
+  left: 0px;
+  width: 25px !important;
+  max-width: 25px !important;
+  max-width: 25px !important;
+  height: 50px !important;
+  max-height: 50px !important;
+  min-height: 50px !important;
+  object-fit: cover;
+  object-position: 0 0;
+  display: inline-block;
+  z-index: 10;
+}
+.lantana_icon_right {
+  position: absolute;
+  left: 0px;
+  width: 50px !important;
+  max-width: 50px !important;
+  max-width: 50px !important;
+  height: 50px !important;
+  max-height: 50px !important;
+  min-height: 50px !important;
+  display: inline-block;
+  z-index: 9;
+}
+.gray {
+  filter: grayscale(100%);
+}
+</style>
+`
 	lantana, err := l.GetLantana(ctx, id)
 	if err != nil {
 		return "", err
 	}
-	contentHTML := fmt.Sprintf("<p>気分評価:%d</p>", lantana.Mood)
+	i := 0
+	for ; i < lantana.Mood; i++ {
+		contentHTML += `<div class="lantana_icon">`
+		if i%2 == 0 {
+			contentHTML += `<img class="lantana_icon_left" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
+		} else {
+			contentHTML += `<img class="lantana_icon_right" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
+		}
+		contentHTML += "</div>"
+	}
+	for ; i < 10; i++ {
+		contentHTML += `<div class="lantana_icon">`
+		if i%2 == 0 {
+			contentHTML += `<img class="lantana_icon_left gray" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
+		} else {
+			contentHTML += `<img class="lantana_icon_right gray" src="data:image/png;base64,` + lantanaIconBase64 + `"/>`
+		}
+		contentHTML += "</div>"
+	}
 	return contentHTML, nil
 }
 
