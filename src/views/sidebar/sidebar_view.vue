@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="sidebar">
         <search_word_text_box @errors="emit_errors" @updated_search_word="emit_updated_search_word"
             ref="search_word_text_box_ref" />
         <mood_filter_view @errors="emit_errors" @updated_mood_filter_query="emit_updated_mood_filter_query"
@@ -74,4 +74,10 @@ async function update_tag_struct_promise() {
     set_checked_tags_by_application(checked_tags)
 }
 </script>
-<style scoped></style>
+<style scoped>
+.sidebar {
+    width: calc(300px);
+    max-width: calc(300px);
+    min-width: calc(300px);
+}
+</style>

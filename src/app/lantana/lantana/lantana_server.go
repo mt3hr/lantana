@@ -94,14 +94,12 @@ func (l *LantanaServer) HandleSearchLantana(w http.ResponseWriter, r *http.Reque
 
 	lantanas, err := filterWords(r.Context(), l.Repositories.LantanaReps, l.Repositories.TextReps, l.Repositories.KmemoReps, words, notWords, false, request.Query)
 	if err != nil {
-		panic(err)
 		err = fmt.Errorf("lantana検索に失敗しました")
 		response.Errors = append(response.Errors, err.Error())
 		return
 	}
 	lantanas, err = filterTags(r.Context(), lantanas, l.Repositories.TagReps, request.Query.Tags, Or, l.Config)
 	if err != nil {
-		panic(err)
 		err = fmt.Errorf("lantana検索に失敗しました")
 		response.Errors = append(response.Errors, err.Error())
 		return

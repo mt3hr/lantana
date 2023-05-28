@@ -34,9 +34,9 @@ function emit_updated_search_word() {
 
 <style>
 .search_word_text_field {
-    width: calc(50px * 5);
-    max-width: calc(50px * 5);
-    min-width: calc(50px * 5);
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
     height: 56px;
     max-height: 56px;
     min-height: 56px;

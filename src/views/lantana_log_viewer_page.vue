@@ -1,6 +1,6 @@
 <template>
     <div id="control-height"></div>
-    <v-navigation-drawer v-model="is_show_drawer" app>
+    <v-navigation-drawer :width="300" class="navigation_drawer" v-model="is_show_drawer" app>
         <sidebar_view :option="option" ref="sidebar_ref" @errors="write_messages"
             @updated_checked_tags="updated_checked_tags" @updated_mood_filter_query="updated_mood_filter_query"
             @updated_search_word="updated_search_word" @updated_tags_by_user="updated_tags_by_user" />
@@ -68,6 +68,7 @@ import { Kmemo } from '@/lantana_data/kmemo';
 import { SearchLantanaRequest } from '@/api_request_response/search-lantana-request';
 import { LantanaSearchQuery } from '@/lantana_data/lantana-search-query';
 import MoodFilterQuery from './sidebar/mood_filter_query';
+import { abort } from 'process';
 
 const sidebar_ref = ref<InstanceType<typeof sidebar_view> | null>(null);
 const add_lantana_dialog_ref = ref<InstanceType<typeof add_lantana_dialog> | null>(null);
@@ -85,6 +86,8 @@ const actual_height = window.innerHeight
 const element_height = document!.querySelector('#control-height') ? document!.querySelector('#control-height')!.clientHeight : actual_height
 const bar_height = (actual_height - element_height) + "px"
 
+let abort_controller = new AbortController()
+
 api.get_application_config(new GetApplicationConfigRequest())
     .then(res => {
         if (res.errors && res.errors.length != 0) {
@@ -94,15 +97,17 @@ api.get_application_config(new GetApplicationConfigRequest())
         option.value = res.application_config
     })
     .then(() => {
-        get_lantana_summary_datas()
+        update_lantana_summary_datas()
     })
 
-async function get_lantana_summary_datas(): Promise<null> {
+async function update_lantana_summary_datas(): Promise<null> {
+    abort_controller.abort()
+    abort_controller = new AbortController()
     loading.value = true
     const query: LantanaSearchQuery = sidebar_ref.value?.construct_lantana_search_query()!
     const request = new SearchLantanaRequest()
     request.query = query
-    return api.search_lantana(request)
+    await api.search_lantana(request, abort_controller)
         .then(res => {
             if (res.errors && res.errors.length != 0) {
                 write_messages(res.errors)
@@ -111,7 +116,10 @@ async function get_lantana_summary_datas(): Promise<null> {
             lantanas.value = res.lantanas
             loading.value = false
         })
-        .then(res => { return null })
+        .catch((err) => {
+            return // DOMException: The user aborted a request.が飛んで邪魔なので握りつぶす
+        })
+    return new Promise<null>((resolve) => { return })
 }
 
 function write_message(message_: string) {
@@ -150,12 +158,12 @@ function added_tag(tag: Tag) {
     sidebar_ref.value?.update_tag_struct_promise()
     update_lantana_detail_view()
     write_message("タグを追加しました")
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
 }
 function added_text(text: Text) {
     update_lantana_detail_view()
     write_message("テキストを追加しました")
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
 }
 function copied_kmemo_id(kmemo: Kmemo) {
     write_message("lantanaのIDをコピーしました")
@@ -165,7 +173,7 @@ function copied_lantana_id(lantana: Lantana) {
 }
 function deleted_lantana(lantana: Lantana) {
     write_message("lantanaを削除しました")
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
     if (watching_lantana.value && lantana.lantana_id == watching_lantana.value.lantana_id) {
         watching_lantana.value = null
         watching_lantana_info.value = null
@@ -176,7 +184,7 @@ function show_add_lantana_dialog() {
 }
 function added_lantana(lantana: Lantana) {
     write_message("lantanaを追加しました")
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
 }
 function added_kmemo(kmemo: Kmemo) {
     write_message("kmemoを追加しました")
@@ -195,16 +203,16 @@ function deleted_kmemo(kmemo: Kmemo) {
     update_lantana_detail_view()
 }
 function updated_checked_tags(tags: Array<string>) {
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
 }
 function updated_mood_filter_query(mood_filter_query: MoodFilterQuery) {
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
 }
 function updated_search_word(word: string) {
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
 }
 function updated_tags_by_user() {
-    get_lantana_summary_datas()
+    update_lantana_summary_datas()
 }
 function clicked_lantana(lantana: Lantana) {
     watching_lantana.value = lantana
@@ -247,6 +255,7 @@ body,
     max-height: calc(100vh - 55px + v-bind(bar_height));
     min-height: calc(100vh - 55px + v-bind(bar_height));
 }
+
 .lantana_list_view,
 .lantana_detail_view {
     width: calc(300px);

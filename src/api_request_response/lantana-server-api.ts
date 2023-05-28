@@ -46,7 +46,7 @@ export class LantanaServerAPI {
 
     // ˄
 
-    async search_lantana(request: SearchLantanaRequest): Promise<SearchLantanaResponse> {
+    async search_lantana(request: SearchLantanaRequest, abort_controller: AbortController): Promise<SearchLantanaResponse> {
         // ˅
         const res = await fetch(LantanaAPIAddress.search_lantana_address, {
             method: LantanaAPIAddress.search_lantana_method,
@@ -54,6 +54,7 @@ export class LantanaServerAPI {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(request),
+            signal: abort_controller.signal,
         })
         const json = await res.json()
         const response: SearchLantanaResponse = json
