@@ -37,11 +37,11 @@ interface Props {
 const props = defineProps<Props>()
 
 const mood: Ref<number> = ref(props.mood)
-const flower_state1: Ref<LantanaFlowerState> = ref(mood.value >= 2 ? LantanaFlowerState.fill : (mood.value >= 1 ? LantanaFlowerState.half: LantanaFlowerState.none))
-const flower_state2: Ref<LantanaFlowerState> = ref(mood.value >= 4 ? LantanaFlowerState.fill : (mood.value >= 3 ? LantanaFlowerState.half: LantanaFlowerState.none))
-const flower_state3: Ref<LantanaFlowerState> = ref(mood.value >= 6 ? LantanaFlowerState.fill : (mood.value >= 5 ? LantanaFlowerState.half: LantanaFlowerState.none))
-const flower_state4: Ref<LantanaFlowerState> = ref(mood.value >= 8 ? LantanaFlowerState.fill : (mood.value >= 7 ? LantanaFlowerState.half: LantanaFlowerState.none))
-const flower_state5: Ref<LantanaFlowerState> = ref(mood.value >= 10 ? LantanaFlowerState.fill : (mood.value >= 9 ? LantanaFlowerState.half: LantanaFlowerState.none))
+const flower_state1: Ref<LantanaFlowerState> = ref(mood.value >= 2 ? LantanaFlowerState.fill : (mood.value >= 1 ? LantanaFlowerState.half : LantanaFlowerState.none))
+const flower_state2: Ref<LantanaFlowerState> = ref(mood.value >= 4 ? LantanaFlowerState.fill : (mood.value >= 3 ? LantanaFlowerState.half : LantanaFlowerState.none))
+const flower_state3: Ref<LantanaFlowerState> = ref(mood.value >= 6 ? LantanaFlowerState.fill : (mood.value >= 5 ? LantanaFlowerState.half : LantanaFlowerState.none))
+const flower_state4: Ref<LantanaFlowerState> = ref(mood.value >= 8 ? LantanaFlowerState.fill : (mood.value >= 7 ? LantanaFlowerState.half : LantanaFlowerState.none))
+const flower_state5: Ref<LantanaFlowerState> = ref(mood.value >= 10 ? LantanaFlowerState.fill : (mood.value >= 9 ? LantanaFlowerState.half : LantanaFlowerState.none))
 
 watch(mood, () => {
     flower_state1.value = (mood.value >= 2 ? LantanaFlowerState.fill : (mood.value >= 1 ? LantanaFlowerState.half : LantanaFlowerState.none))
@@ -55,6 +55,10 @@ watch(mood, () => {
 defineExpose({
     get_mood,
     set_mood,
+})
+
+watch(() => props.mood, () => {
+    mood.value = props.mood
 })
 
 const emits = defineEmits<{
