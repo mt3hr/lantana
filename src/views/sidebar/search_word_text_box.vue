@@ -1,5 +1,5 @@
 <template>
-    <v-text-field class="search_word_text_field" v-model="search_word" :label="'検索'" @keypress.enter="emit_updated_search_word" />
+    <v-text-field class="search_word_text_field" v-model="search_word" :label="'キーワード'" @keypress.enter="emit_updated_search_word" />
 </template>
 
 <script setup lang="ts">

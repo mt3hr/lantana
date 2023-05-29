@@ -1,6 +1,6 @@
 <template>
     <div id="control-height"></div>
-    <v-navigation-drawer :width="300" class="navigation_drawer" v-model="is_show_drawer" app>
+    <v-navigation-drawer :width="340" class="navigation_drawer" v-model="is_show_drawer" app>
         <sidebar_view :option="option" ref="sidebar_ref" @errors="write_messages"
             @updated_checked_tags="updated_checked_tags" @updated_mood_filter_query="updated_mood_filter_query"
             @updated_search_word="updated_search_word" @updated_tags_by_user="updated_tags_by_user" />
@@ -12,15 +12,15 @@
     </v-app-bar>
 
     <v-main class="main">
-        <table class="lantana_view_wrap pa-0 ma-0">
-            <tr class="pa-0 ma-0">
-                <td class="pa-0 ma-0">
+        <table class="lantana_view">
+            <tr>
+                <td>
                     <lantana_list_view class="lantana_list_view" :loading="loading" :lantanas="lantanas"
                         @errors="write_messages" @added_tag="added_tag" @added_text="added_text"
                         @copied_lantana_id="copied_lantana_id" @deleted_lantana="deleted_lantana"
                         @clicked_lantana="clicked_lantana" @added_kmemo="added_kmemo" />
                 </td>
-                <td class="pa-0 ma-0">
+                <td>
                     <lantana_detail_view class="lantana_detail_view" v-if="watching_lantana_info"
                         :lantana_info="watching_lantana_info" @errors="write_messages" @added_tag="added_tag"
                         @added_text="added_text" @copied_kmemo_id="copied_kmemo_id" @copied_lantana_id="copied_lantana_id"
@@ -258,8 +258,8 @@ body,
 
 .lantana_list_view,
 .lantana_detail_view {
-    width: calc(300px);
-    max-width: calc(300px);
-    min-width: calc(300px);
+    width: calc(320px);
+    max-width: calc(320px);
+    min-width: calc(320px);
 }
 </style>

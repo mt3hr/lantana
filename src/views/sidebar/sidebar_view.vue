@@ -2,6 +2,12 @@
     <div class="sidebar">
         <search_word_text_box @errors="emit_errors" @updated_search_word="emit_updated_search_word"
             ref="search_word_text_box_ref" />
+        <v-row class="ma-0 pa-0">
+            <v-spacer />
+            <v-col cols="auto" class="ma-0 pa-0">
+                <v-btn @click="emit_updated_search_word">検索</v-btn>
+            </v-col>
+        </v-row>
         <mood_filter_view @errors="emit_errors" @updated_mood_filter_query="emit_updated_mood_filter_query"
             ref="mood_filter_view_ref" />
         <tag_list_view :option="option" @errors="emit_errors" @updated_by_user="emit_updated_tags_by_user"
@@ -79,5 +85,7 @@ async function update_tag_struct_promise() {
     width: calc(300px);
     max-width: calc(300px);
     min-width: calc(300px);
+    margin-top: 10px;
+    margin-left: 10px;
 }
 </style>

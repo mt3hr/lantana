@@ -1,6 +1,6 @@
 {
   "name": "lantana",
-  "version": "1.0.4",
+  "version": "1.0.4k",
   "private": true,
   "scripts": {
     "dev": "vite",

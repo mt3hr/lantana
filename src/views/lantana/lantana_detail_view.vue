@@ -1,5 +1,5 @@
 <template>
-    <div class="lantana pa-0 ma-0" @contextmenu.prevent.stop="show_contextmenu">
+    <div class="lantana" @contextmenu.prevent.stop="show_contextmenu">
         <p class="time">{{ format_time(lantana_info.lantana.time) }}</p>
         <p class="lantana_content">
             <tag_view v-for="tag in lantana_info?.tags" :tag="tag" @errors="emit_errors" @deleted_tag="emit_deleted_tag" />
@@ -105,7 +105,10 @@ function emit_deleted_lantana(lantana: Lantana) {
 </script>
 
 <style scoped>
-.lantana {}
+.lantana {
+    margin-left: 10px;
+    margin-right: 10px;
+}
 
 .lantana_content {
     white-space: pre-line;

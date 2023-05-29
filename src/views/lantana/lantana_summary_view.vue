@@ -83,6 +83,9 @@ function emit_added_kmemo(kmemo: Kmemo) {
 </script>
 
 <style scoped>
+.lantana {
+    margin: 10px;
+}
 .lantana_content {
     white-space: pre-line;
 }
