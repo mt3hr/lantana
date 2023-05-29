@@ -88,7 +88,7 @@ func (l LantanaReps) GetLantana(ctx context.Context, lantanaID string) (*Lantana
 			defer wg.Done()
 			matchLantana, err := rep.GetLantana(ctx, lantanaID)
 			if err != nil {
-				errch <- err
+				// errch <- err
 				return
 			}
 			ch <- matchLantana
