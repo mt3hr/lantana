@@ -279,7 +279,7 @@ func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (
   object-fit: cover;
   object-position: 0 0;
   display: inline-block;
-  z-index: 10;
+  z-index: 5;
 }
 .lantana_icon_right {
   position: absolute;
@@ -291,7 +291,7 @@ func (l *lantanaRepSQLite3Impl) GetContentHTML(ctx context.Context, id string) (
   max-height: 50px !important;
   min-height: 50px !important;
   display: inline-block;
-  z-index: 9;
+  z-index: 4;
 }
 .gray {
   filter: grayscale(100%);
