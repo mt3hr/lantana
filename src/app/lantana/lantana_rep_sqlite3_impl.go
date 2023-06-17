@@ -392,6 +392,8 @@ func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyo
 			return nil, err
 		}
 		query.Mood = int(mood)
+	} else {
+		return kyous, nil
 	}
 
 	lantanas, err := l.SearchLantana(ctx, query)
