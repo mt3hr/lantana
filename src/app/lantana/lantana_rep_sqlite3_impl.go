@@ -379,7 +379,7 @@ func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyo
 	} else if strings.HasPrefix(word, "lantana<=") {
 		*query.LantanaSearchType = LessThan
 		moodstr := strings.TrimPrefix(word, "lantana<=")
-		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana<="), 10, 64)
+		mood, err := strconv.ParseInt(moodstr, 10, 64)
 		if err != nil {
 			return nil, err
 		}
@@ -387,7 +387,7 @@ func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyo
 	} else if strings.HasPrefix(word, "lantana>=") {
 		*query.LantanaSearchType = GreaterThan
 		moodstr := strings.TrimPrefix(word, "lantana>=")
-		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana>="), 10, 64)
+		mood, err := strconv.ParseInt(moodstr, 10, 64)
 		if err != nil {
 			return nil, err
 		}

@@ -25,6 +25,7 @@ func Execute() {
 func init() {
 	cobra.MousetrapHelpText = "" // Windowsでマウスから起動しても怒られないようにする
 	appCmd.PersistentFlags().StringVarP(&lantanaServer.ConfigFileName, "config_file", "c", "", "使用するコンフィグファイル")
+	appCmd.PersistentFlags().StringVarP(&lantana.TagStructFile, "tag_struct_file", "t", "", "使用するタグ構造ファイル")
 }
 
 var (
@@ -36,7 +37,7 @@ var (
 			if err != nil {
 				log.Fatal(err)
 			}
-			err = lantanaServer.LoadTagStruct()
+			err = lantanaServer.LoadTagStructFromFile()
 			if err != nil {
 				log.Fatal(err)
 			}
