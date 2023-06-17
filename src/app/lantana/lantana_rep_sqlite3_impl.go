@@ -359,6 +359,9 @@ func (l *lantanaRepSQLite3Impl) RepName() string {
 
 func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyou.Kyou, error) {
 	kyous := []*kyou.Kyou{}
+	if word == "" {
+		return kyous, nil
+	}
 
 	query := &LantanaSearchQuery{}
 	lantanaSearchType := All
@@ -367,13 +370,15 @@ func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyo
 	*query.LantanaSearchType = All
 	if strings.HasPrefix(word, "lantana=") {
 		*query.LantanaSearchType = Match
-		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana="), 10, 64)
+		moodstr := strings.TrimPrefix(word, "lantana=")
+		mood, err := strconv.ParseInt(moodstr, 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		query.Mood = int(mood)
 	} else if strings.HasPrefix(word, "lantana<=") {
 		*query.LantanaSearchType = LessThan
+		moodstr := strings.TrimPrefix(word, "lantana<=")
 		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana<="), 10, 64)
 		if err != nil {
 			return nil, err
@@ -381,6 +386,7 @@ func (l *lantanaRepSQLite3Impl) Search(ctx context.Context, word string) ([]*kyo
 		query.Mood = int(mood)
 	} else if strings.HasPrefix(word, "lantana>=") {
 		*query.LantanaSearchType = GreaterThan
+		moodstr := strings.TrimPrefix(word, "lantana>=")
 		mood, err := strconv.ParseInt(strings.TrimPrefix(word, "lantana>="), 10, 64)
 		if err != nil {
 			return nil, err
